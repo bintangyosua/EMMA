@@ -1,4 +1,5 @@
 import 'package:emma/eisenhower-matrix/task-item.dart';
+import 'package:emma/eisenhower-matrix/task_modal.dart';
 import 'package:flutter/material.dart';
 
 class EisenhowerMatrixPage extends StatefulWidget {
@@ -23,6 +24,17 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Eisenhower Matrix'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return TaskModal();
+              });
+        },
+        // foregroundColor: Colors.blue,
+        child: const Icon(Icons.add),
       ),
       body: Row(
         children: [
