@@ -1,3 +1,4 @@
+import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
 
 class TaskItem extends StatefulWidget {
@@ -35,6 +36,15 @@ class _TaskItemState extends State<TaskItem> {
       onTap: () {
         setState(() {
           _isChecked = !_isChecked;
+          Task task = Task(
+              name: 'Tes',
+              deadline: DateTime.now(),
+              description: 'Tes',
+              reminder: DateTime.now(),
+              uid: 'terserah',
+              user_id: '5g7TjtnXiOUPlwQaiuX1');
+
+          task.findAll().then((value) => print(value));
         });
       },
       tileColor: const Color(0xffE9F4F6),
