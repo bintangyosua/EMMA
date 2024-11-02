@@ -1,3 +1,5 @@
+import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
+import 'package:emma/navigation-bar/navigation-bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -69,10 +71,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EMMA',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: const NavigationExample(),
     );
   }
 }
