@@ -55,14 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 0),
-              child: Image.asset(
-                "assets/images/vector-2.png",
-                width: 700,
-                height: 550,
-              ),
-            ),
+
             const SizedBox(height: 18),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
