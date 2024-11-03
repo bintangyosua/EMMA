@@ -1,3 +1,7 @@
+import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
+import 'package:emma/navigation-bar/navigation-bar.dart';
+import 'package:emma/ui/register_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -69,10 +73,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EMMA',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            User? user = snapshot.data;
+            // Jika pengguna terautentikasi, arahkan ke HomePage
+            if (user != null) {
+              return NavigationExample();
+            }
+            // Jika tidak, arahkan ke LoginPage
+            return LoginScreen();
+          }
+          // Menampilkan indikator loading saat memeriksa status login
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }
