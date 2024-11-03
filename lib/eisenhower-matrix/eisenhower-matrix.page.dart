@@ -1,5 +1,6 @@
 import 'package:emma/eisenhower-matrix/task-item.dart';
 import 'package:emma/eisenhower-matrix/task_modal.dart';
+import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
 
 class EisenhowerMatrixPage extends StatefulWidget {
@@ -8,16 +9,24 @@ class EisenhowerMatrixPage extends StatefulWidget {
 }
 
 class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
-  List<TaskItem> _tasks = [
-    TaskItem(
-      title: 'Task 1',
-      isChecked: false,
-    ),
-    TaskItem(
-      title: 'Task 2',
-      isChecked: false,
-    ),
-  ];
+  List<Task> _urgentImportantTasks = [];
+  List<Task> _notUrgentImportantTasks = [];
+  List<Task> _urgentNotImportantTasks = [];
+  List<Task> _notUrgentNotImportantTasks = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadTasks();
+  }
+
+  // Method untuk memuat task dari Firebase
+  void _loadTasks() async {
+    setState(() async {
+      _urgentImportantTasks = await Task.findTasksByCategory('uw0sLWpsSWYFPfeTbijO');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,49 +72,17 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                             ),
                             Expanded(
                               child: ListView.builder(
-                                itemCount: _tasks.length,
+                                itemCount: _urgentImportantTasks.length,
                                 itemBuilder: (context, index) {
-                                  return _tasks[index];
+                                  final task = _urgentImportantTasks[index];
+                                  return ListTile(
+                                    title: Text(task.name),
+                                    subtitle: Text(task.deadline.toString()),
+                                  );
                                 },
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        right: 10,
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Container(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextField(
-                                        decoration: InputDecoration(
-                                          labelText: 'Task Name',
-                                        ),
-                                        onSubmitted: (value) {
-                                          setState(() {
-                                            _tasks.add(TaskItem(
-                                              title: value,
-                                              isChecked: false,
-                                            ));
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: const Icon(Icons.add),
                         ),
                       ),
                     ],

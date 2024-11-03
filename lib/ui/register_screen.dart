@@ -17,11 +17,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void register() async {
     try {
+      print('sini');
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: _passwordController.text);
+      print('masuk sini');
 
       if (userCredential.user != null) {
+        print('terus ke sini');
         String uid = userCredential.user!.uid;
         await _firestore.collection('users').doc(uid).set({
           'email': _emailController.text,
@@ -51,7 +54,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(  // Wrap the Column in a scrollable container
+      body: SingleChildScrollView(
+        // Wrap the Column in a scrollable container
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -93,11 +97,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(width: 1, color: Color(0xFF837E93)),
+                          borderSide:
+                              BorderSide(width: 1, color: Color(0xFF837E93)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(width: 1, color: Color(0xFF9F7BFF)),
+                          borderSide:
+                              BorderSide(width: 1, color: Color(0xFF9F7BFF)),
                         ),
                       ),
                     ),
@@ -135,12 +141,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontWeight: FontWeight.w600,
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(width: 1, color: Color(0xFF837E93)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(
+                                  width: 1, color: Color(0xFF837E93)),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(width: 1, color: Color(0xFF9F7BFF)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(
+                                  width: 1, color: Color(0xFF9F7BFF)),
                             ),
                           ),
                         ),
@@ -172,12 +182,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontWeight: FontWeight.w600,
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(width: 1, color: Color(0xFF837E93)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(
+                                  width: 1, color: Color(0xFF837E93)),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(width: 1, color: Color(0xFF9F7BFF)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(
+                                  width: 1, color: Color(0xFF9F7BFF)),
                             ),
                           ),
                         ),
@@ -225,7 +239,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => LoginScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
                           );
                         },
                         child: const Text(
@@ -248,6 +263,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-
-
 }
