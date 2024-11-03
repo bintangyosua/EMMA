@@ -24,7 +24,8 @@ class Task {
 
     try {
       // Mengambil snapshot dari koleksi 'tasks'
-      QuerySnapshot<Map<String, dynamic>> snapshot = await db.collection('tasks').get();
+      QuerySnapshot<Map<String, dynamic>> snapshot =
+          await db.collection('tasks').get();
 
       // Mapping data dari snapshot ke dalam list Task
       List<Task> tasks = snapshot.docs.map((doc) {
@@ -65,12 +66,21 @@ class Task {
   // Factory method untuk konversi data dari Firestore ke dalam objek Task
   factory Task.fromMap(Map<String, dynamic> map, String uid) {
     return Task(
-      deadline: map['deadline'] != null ? (map['deadline'] as Timestamp).toDate() : null,
-      desc: map['desc'] ?? 'No description',  // Nilai default jika deskripsi kosong
-      name: map['name'] ?? 'Untitled',               // Nilai default jika name kosong
-      reminder: map['reminder'] != null ? (map['reminder'] as Timestamp).toDate() : null,
-      user_id: map['user_id'] is DocumentReference ? (map['user_id'] as DocumentReference).id : map['user_id'],
-      category_id: map['category_id'] is DocumentReference ? (map['category_id'] as DocumentReference).id : map['category_id'],
+      deadline: map['deadline'] != null
+          ? (map['deadline'] as Timestamp).toDate()
+          : null,
+      desc: map['desc'] ??
+          'No description', // Nilai default jika deskripsi kosong
+      name: map['name'] ?? 'Untitled', // Nilai default jika name kosong
+      reminder: map['reminder'] != null
+          ? (map['reminder'] as Timestamp).toDate()
+          : null,
+      user_id: map['user_id'] is DocumentReference
+          ? (map['user_id'] as DocumentReference).id
+          : map['user_id'],
+      category_id: map['category_id'] is DocumentReference
+          ? (map['category_id'] as DocumentReference).id
+          : map['category_id'],
     );
   }
 }
