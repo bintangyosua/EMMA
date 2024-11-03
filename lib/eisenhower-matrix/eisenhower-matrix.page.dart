@@ -24,7 +24,8 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
   // Method untuk memuat task dari Firebase
   void _loadTasks() async {
     setState(() async {
-      _urgentImportantTasks = await Task.findTasksByCategory('uw0sLWpsSWYFPfeTbijO');
+      _urgentImportantTasks =
+          await Task.findTasksByCategory('uw0sLWpsSWYFPfeTbijO');
     });
   }
 
