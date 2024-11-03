@@ -23,9 +23,23 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
 
   // Method untuk memuat task dari Firebase
   void _loadTasks() async {
-    setState(() async {
-      _urgentImportantTasks = await Task.findTasksByCategory('uw0sLWpsSWYFPfeTbijO');
-    });
+    try {
+      List<Task> tasks = await Task.findTasksByCategory('category/uw0sLWpsSWYFPfeTbijO');
+      if (mounted) {
+        setState(() {
+          _urgentImportantTasks = tasks;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Loaded ${tasks.length} tasks."),
+        ));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Error loading tasks: $e"),
+        ));
+      }
+    }
   }
 
   @override

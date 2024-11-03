@@ -1,3 +1,4 @@
+import 'package:emma/navigation-bar/navigation-bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // Login success -> Homepage
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => NavigationExample()),
         );
       }
     } catch (e) {

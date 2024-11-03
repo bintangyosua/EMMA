@@ -44,20 +44,19 @@ class Task {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     try {
-      // Query berdasarkan category_id
       QuerySnapshot<Map<String, dynamic>> snapshot = await db
           .collection('tasks')
-          .where('category_id', isEqualTo: categoryId)
-          .where('user_id', isEqualTo: currentUser?.uid)
+          .where('category_id', isEqualTo: '/category/uw0sLWpsSWYFPfeTbijO')
           .get();
 
-      print("user name: ${currentUser?.email}");
-
-      return snapshot.docs.map((doc) {
+      // Mapping data from snapshot to a list of Task objects
+      List<Task> tasks = snapshot.docs.map((doc) {
         return Task.fromMap(doc.data(), doc.id);
       }).toList();
+
+      return tasks;
     } catch (e) {
-      print('Error fetching tasks by category: $e');
+      print('Error fetching tasks: $e');
       return [];
     }
   }
