@@ -13,40 +13,41 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _nameController = TextEditingController(); // For the user's name
+  final _nameController = TextEditingController();
+  String? _errorMessage; // Define _errorMessage here
 
   void register() async {
     try {
-      print('sini');
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: _passwordController.text);
-      print('masuk sini');
 
       if (userCredential.user != null) {
-        print('terus ke sini');
         String uid = userCredential.user!.uid;
         await _firestore.collection('users').doc(uid).set({
           'email': _emailController.text,
           'name': _nameController.text,
           'password': _passwordController.text, // Store the plain password
-          'mode_id': 'pkHOIxVBbFeX5jJPf2DS', // Reference to the mode document
+          'mode_id': 'pkHOIxVBbFeX5jJPf2DS',
         });
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Registration successful!"),
         ));
 
-        // Back to Login Page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => LoginScreen()),
         );
       }
     } catch (e) {
-      // Error Message
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Registration failed. Please try again."),
-      ));
+      setState(() {
+        if (e is FirebaseAuthException && e.message != null) {
+          _errorMessage = e.message; // Only show the message part of the error
+        } else {
+          _errorMessage = "Registration failed. Please try again.";
+        }
+      });
     }
   }
 
@@ -55,11 +56,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        // Wrap the Column in a scrollable container
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const SizedBox(height: 18),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -89,6 +88,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       decoration: const InputDecoration(
                         labelText: 'Email',
+                        hintText: 'Input your email address',
+                        hintStyle: TextStyle(
+                          color: Color(0xFF837E93),
+                          fontSize: 10,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400,
+                        ),
                         labelStyle: TextStyle(
                           color: Color(0xFF755DC1),
                           fontSize: 15,
@@ -168,7 +174,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                           decoration: const InputDecoration(
-                            labelText: 'Name',
+                            labelText: 'Username',
+                            hintText: 'Set your username',
                             hintStyle: TextStyle(
                               color: Color(0xFF837E93),
                               fontSize: 10,
@@ -198,7 +205,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: const [
+                      Icon(
+                        Icons.circle,
+                        size: 8,
+                        color: Color(0xFF837E93),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        'Password must be at least 6 characters.',
+                        style: TextStyle(
+                          color: Color(0xFF837E93),
+                          fontSize: 12,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Display the error message above the button if there is one
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        _errorMessage!,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 5),
                   ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     child: SizedBox(
@@ -225,8 +265,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Row(
                     children: [
                       const Text(
-                        ' have an account?',
-                        textAlign: TextAlign.center,
+                        'Have an account?',
                         style: TextStyle(
                           color: Color(0xFF837E93),
                           fontSize: 13,
@@ -244,7 +283,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           );
                         },
                         child: const Text(
-                          'Log In ',
+                          'Log In',
                           style: TextStyle(
                             color: Color(0xFF755DC1),
                             fontSize: 13,
