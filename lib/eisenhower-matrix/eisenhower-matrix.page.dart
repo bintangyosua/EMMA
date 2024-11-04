@@ -1,5 +1,6 @@
 import 'package:emma/eisenhower-matrix/task-item.dart';
 import 'package:emma/eisenhower-matrix/task_modal.dart';
+import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,13 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
     // Panggil `setState` hanya untuk memperbarui state setelah data diambil
     setState(() {
       _urgentImportantTasks = urgentImportantTasks;
+    });
+  }
+
+  void _toggleCrossOut(int index) {
+    setState(() {
+      _urgentImportantTasks[index].isCrossedOut =
+          !_urgentImportantTasks[index].isCrossedOut;
     });
   }
 
@@ -85,8 +93,25 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                                 itemBuilder: (context, index) {
                                   final task = _urgentImportantTasks[index];
                                   return ListTile(
-                                    title: Text(task.name),
-                                    subtitle: Text(task.deadline.toString()),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TaskDetailPage(
+                                              task:
+                                                  _urgentImportantTasks[index],
+                                              onTaskChanged: () =>
+                                                  _loadTasks()),
+                                        ),
+                                      );
+                                    },
+                                    title: Text(
+                                      task.name.length > 30
+                                          ? '${task.name.substring(0, 20)}...'
+                                          : task.name,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    dense: true,
                                   );
                                 },
                               ),

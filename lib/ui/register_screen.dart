@@ -29,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           'password': _passwordController.text, // Store the plain password
           'mode_id': 'pkHOIxVBbFeX5jJPf2DS', // Reference to the mode document
         });
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Registration successful!"),
         ));
