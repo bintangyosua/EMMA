@@ -32,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           'password': _passwordController.text, // Store the plain password
           'mode_id': 'pkHOIxVBbFeX5jJPf2DS', // Reference to the mode document
         });
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Registration successful!"),
         ));
@@ -59,7 +60,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const SizedBox(height: 18),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),

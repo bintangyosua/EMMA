@@ -1,3 +1,4 @@
+import 'package:emma/navigation-bar/navigation-bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
@@ -20,16 +21,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (userCredential.user != null) {
         // Login success -> Homepage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const NavigationExample()),
+          );
+        }
       }
     } catch (e) {
       // Error Message
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Login failed. Please check your credentials."),
-      ));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Login failed. Please check your credentials."),
+        ));
+      }
     }
   }
 
@@ -40,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           const SizedBox(height: 18),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -76,11 +80,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(width: 1, color: Color(0xFF837E93)),
+                      borderSide:
+                          BorderSide(width: 1, color: Color(0xFF837E93)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(width: 1, color: Color(0xFF9F7BFF)),
+                      borderSide:
+                          BorderSide(width: 1, color: Color(0xFF9F7BFF)),
                     ),
                   ),
                 ),
@@ -105,11 +111,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(width: 1, color: Color(0xFF837E93)),
+                      borderSide:
+                          BorderSide(width: 1, color: Color(0xFF837E93)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(width: 1, color: Color(0xFF9F7BFF)),
+                      borderSide:
+                          BorderSide(width: 1, color: Color(0xFF9F7BFF)),
                     ),
                   ),
                 ),
@@ -153,7 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RegisterScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen()),
                         );
                       },
                       child: const Text(
