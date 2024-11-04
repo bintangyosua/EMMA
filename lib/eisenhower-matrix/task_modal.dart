@@ -1,11 +1,15 @@
-import 'package:emma/eisenhower-matrix/task-item.dart';
+import 'package:emma/models/category.dart';
 import 'package:emma/models/task.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:intl/intl.dart';
 
 class TaskModal extends StatefulWidget {
-  const TaskModal({Key? key}) : super(key: key);
+  final Function onTaskAdded;
+
+  const TaskModal({super.key, required this.onTaskAdded});
 
   @override
   _TaskModalState createState() => _TaskModalState();
@@ -13,13 +17,42 @@ class TaskModal extends StatefulWidget {
 
 class _TaskModalState extends State<TaskModal> {
   final _formKey = GlobalKey<FormState>();
-  late String _taskName;
-  late DateTime _taskDeadline;
-  late DateTime _taskReminder;
+  DateTime? _taskDeadline;
+  DateTime? _taskReminder;
+  List<Category> categories = [];
 
   final TextEditingController _taskNameController = TextEditingController();
   final TextEditingController _taskDescController = TextEditingController();
   final TextEditingController _taskCategoryController = TextEditingController();
+  final TextEditingController _taskDeadlineController = TextEditingController();
+  final TextEditingController _taskReminderController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategory();
+  }
+
+  // Method untuk memuat task dari Firebase
+  void _loadCategory() async {
+    // Ambil task berdasarkan kategori tanpa `setState` terlebih dahulu
+    List<Category> res = await Category.findAll();
+
+    if (res.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No category found'),
+        ),
+      );
+
+      return;
+    }
+
+    // Panggil `setState` hanya untuk memperbarui state setelah data diambil
+    setState(() {
+      categories = res;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,31 +73,38 @@ class _TaskModalState extends State<TaskModal> {
               return null;
             },
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           DropdownButtonFormField<String>(
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a category';
+              }
+              return null;
+            },
             decoration: const InputDecoration(
               labelText: 'Select Category',
             ),
-            items: <String>[
-              'Do Now',
-              'Urgent & Not Important',
-              'Not Urgent & Important',
-              'Not Urgent & Not Important'
-            ].map<DropdownMenuItem<String>>((String value) {
+            items:
+                categories.map<DropdownMenuItem<String>>((Category category) {
               return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
+                value: category.uid, // Set `uid` as the value
+                child: Text(category.name), // Show `name` in the UI
               );
             }).toList(),
-            onChanged: (String? newValue) {
-              // Handle change
-              if (newValue == null)
+            onChanged: (String? selectedUid) {
+              // Update the controller based on selected category
+              if (selectedUid == null) {
                 _taskCategoryController.text = 'Do Now';
-              else
-                _taskCategoryController.text = newValue;
+              } else {
+                // Find the selected category by its uid
+                final selectedCategory = categories.firstWhere(
+                  (category) => category.uid == selectedUid,
+                );
+                _taskCategoryController.text = selectedCategory.uid;
+              }
             },
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           TextButton(
             child: const Text('Generate AI'),
             onPressed: () async {
@@ -74,7 +114,7 @@ class _TaskModalState extends State<TaskModal> {
                     apiKey: dotenv.env['GEMINI_API_KEY'] ?? '');
                 final response = await model.generateContent([
                   Content.text(
-                      'I want to make a task called ${_taskNameController.text.toLowerCase()}. what shoulod i do?')
+                      'Create a short description for the task named "${_taskNameController.text}". Describe its purpose, key steps, and expected outcomes.')
                 ]);
                 _taskDescController.text = '${response.text}';
               } else {
@@ -82,12 +122,12 @@ class _TaskModalState extends State<TaskModal> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Alert'),
-                      content: Text(
+                      title: const Text('Alert'),
+                      content: const Text(
                           'Please enter a task name before generating AI description.'),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('OK'),
+                          child: const Text('OK'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -116,6 +156,56 @@ class _TaskModalState extends State<TaskModal> {
               return null;
             },
           ),
+          TextFormField(
+            controller: _taskDeadlineController,
+            readOnly: true,
+            decoration: const InputDecoration(
+              labelText: 'Deadline',
+            ),
+            onTap: () async {
+              final DateTime? picked = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2030),
+                helpText: 'Select Deadline',
+                errorFormatText: 'Enter valid date',
+                errorInvalidText: 'Enter date in valid range',
+              );
+              if (picked != null) {
+                setState(() {
+                  _taskDeadline = picked;
+                  _taskDeadlineController.text = DateFormat('dd/MM/yyyy')
+                      .format(_taskDeadline ?? DateTime.now());
+                });
+              }
+            },
+          ),
+          TextFormField(
+            controller: _taskReminderController,
+            readOnly: true,
+            decoration: const InputDecoration(
+              labelText: 'Reminder',
+            ),
+            onTap: () async {
+              final DateTime? picked = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2030),
+                helpText: 'Select Reminder',
+                errorFormatText: 'Enter valid date',
+                errorInvalidText: 'Enter date in valid range',
+              );
+              if (picked != null) {
+                setState(() {
+                  _taskReminder = picked;
+                  _taskReminderController.text = DateFormat('dd/MM/yyyy')
+                      .format(_taskReminder ?? DateTime.now());
+                });
+              }
+            },
+          ),
         ]),
       ),
       actions: <Widget>[
@@ -126,25 +216,35 @@ class _TaskModalState extends State<TaskModal> {
           },
         ),
         TextButton(
-          child: const Text('Add'),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _taskName = _taskNameController.text;
-
-              Task task = new Task(
+            child: const Text('Add'),
+            onPressed: () {
+              User currentUser = FirebaseAuth.instance.currentUser!;
+              Task newTask = Task(
                 name: _taskNameController.text,
-                category_id: _taskCategoryController.text,
                 desc: _taskDescController.text,
-                deadline: DateTime.now(),
-                reminder: DateTime.now(),
-                user_id: '5g7TjtnXiOUPlwQaiuX1',
+                category_id: _taskCategoryController.text,
+                deadline: _taskDeadline,
+                reminder: _taskReminder,
+                user_id: currentUser.uid,
               );
 
-              //TODO: add task to database
-              Navigator.of(context).pop();
-            }
-          },
-        ),
+              if (_taskNameController.text.isEmpty ||
+                  _taskDescController.text.isEmpty ||
+                  _taskCategoryController.text.isEmpty ||
+                  _taskDeadline == null ||
+                  _taskReminder == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Semua field wajib diisi'),
+                  ),
+                );
+                return; // Exit the function if any field is empty
+              } else {
+                Navigator.of(context).pop();
+                newTask.save();
+                widget.onTaskAdded();
+              }
+            }),
       ],
     );
   }

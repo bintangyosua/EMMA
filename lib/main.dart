@@ -1,6 +1,4 @@
-import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
 import 'package:emma/navigation-bar/navigation-bar.dart';
-import 'package:emma/ui/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,7 +9,6 @@ import 'package:emma/ui/login_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // using assets: in pubspec.yaml so that the package can be read -_-
   await dotenv.load(fileName: "assets/.env");
 
   await Firebase.initializeApp(
@@ -83,13 +80,13 @@ class MyApp extends StatelessWidget {
             User? user = snapshot.data;
             // Jika pengguna terautentikasi, arahkan ke HomePage
             if (user != null) {
-              return NavigationExample();
+              return const NavigationExample();
             }
             // Jika tidak, arahkan ke LoginPage
             return LoginScreen();
           }
           // Menampilkan indikator loading saat memeriksa status login
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

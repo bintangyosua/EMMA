@@ -1,5 +1,5 @@
-import 'package:emma/eisenhower-matrix/task-item.dart';
 import 'package:emma/eisenhower-matrix/task_modal.dart';
+import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
 
@@ -16,16 +16,19 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadTasks();
   }
 
   // Method untuk memuat task dari Firebase
   void _loadTasks() async {
-    setState(() async {
-      _urgentImportantTasks =
-          await Task.findTasksByCategory('uw0sLWpsSWYFPfeTbijO');
+    // Ambil task berdasarkan kategori tanpa `setState` terlebih dahulu
+    List<Task> urgentImportantTasks =
+        await Task.findTasksByCategory('uw0sLWpsSWYFPfeTbijO');
+
+    // Panggil `setState` hanya untuk memperbarui state setelah data diambil
+    setState(() {
+      _urgentImportantTasks = urgentImportantTasks;
     });
   }
 
@@ -40,7 +43,11 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return TaskModal();
+                return TaskModal(
+                  onTaskAdded: () {
+                    _loadTasks();
+                  },
+                );
               });
         },
         // foregroundColor: Colors.blue,
@@ -77,8 +84,25 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                                 itemBuilder: (context, index) {
                                   final task = _urgentImportantTasks[index];
                                   return ListTile(
-                                    title: Text(task.name),
-                                    subtitle: Text(task.deadline.toString()),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TaskDetailPage(
+                                              task:
+                                                  _urgentImportantTasks[index],
+                                              onTaskChanged: () =>
+                                                  _loadTasks()),
+                                        ),
+                                      );
+                                    },
+                                    title: Text(
+                                      task.name.length > 30
+                                          ? '${task.name.substring(0, 20)}...'
+                                          : task.name,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    dense: true,
                                   );
                                 },
                               ),
