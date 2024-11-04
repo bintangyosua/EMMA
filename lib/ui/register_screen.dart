@@ -206,36 +206,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  Row(
-                    children: const [
-                      Icon(
-                        Icons.circle,
-                        size: 8,
-                        color: Color(0xFF837E93),
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        'Password must be at least 6 characters.',
-                        style: TextStyle(
-                          color: Color(0xFF837E93),
-                          fontSize: 12,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
                   // Display the error message above the button if there is one
                   if (_errorMessage != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        _errorMessage!,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 8,
+                            color: Color.fromARGB(255, 219, 12, 12),
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            _errorMessage!,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   const SizedBox(height: 5),

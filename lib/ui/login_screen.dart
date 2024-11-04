@@ -127,7 +127,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (_errorMessage.isNotEmpty)
                   Row(
                     children: [
-                      const SizedBox(width: 6),
+                      const Icon(
+                        Icons.circle,
+                        size: 8,
+                        color: Color.fromARGB(255, 219, 12, 12),
+                      ),
+                      const SizedBox(width: 5),
                       Expanded(
                         child: Text(
                           _errorMessage,
