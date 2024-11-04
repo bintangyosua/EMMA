@@ -37,7 +37,7 @@ class _TaskItemState extends State<TaskItem> {
         setState(() {
           _isChecked = !_isChecked;
           Task.findAll().then((tasks) {
-            print(tasks[0].desc);
+            // print(tasks[0].desc);
           });
         });
       },

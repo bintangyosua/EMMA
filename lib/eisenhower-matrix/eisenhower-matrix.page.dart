@@ -44,7 +44,11 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return TaskModal();
+                return TaskModal(
+                  onTaskAdded: () {
+                    _loadTasks();
+                  },
+                );
               });
         },
         // foregroundColor: Colors.blue,
@@ -79,7 +83,6 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                               child: ListView.builder(
                                 itemCount: _urgentImportantTasks.length,
                                 itemBuilder: (context, index) {
-                                  print('hello');
                                   final task = _urgentImportantTasks[index];
                                   return ListTile(
                                     title: Text(task.name),

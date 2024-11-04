@@ -17,14 +17,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void register() async {
     try {
-      print('sini');
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: _passwordController.text);
-      print('masuk sini');
 
       if (userCredential.user != null) {
-        print('terus ke sini');
         String uid = userCredential.user!.uid;
         await _firestore.collection('users').doc(uid).set({
           'email': _emailController.text,
@@ -59,7 +56,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const SizedBox(height: 18),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),

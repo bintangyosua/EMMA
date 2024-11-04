@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Task {
+  final String? uid;
   final DateTime? deadline;
   final String desc;
   final String name;
@@ -10,6 +11,7 @@ class Task {
   final String category_id;
 
   Task({
+    this.uid,
     required this.deadline,
     required this.desc,
     required this.name,
@@ -17,6 +19,17 @@ class Task {
     required this.user_id,
     required this.category_id,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'deadline': deadline,
+      'desc': desc,
+      'name': name,
+      'reminder': reminder,
+      'user_id': user_id,
+      'category_id': category_id,
+    };
+  }
 
   // Method untuk mengambil semua task dari Firestore
   static Future<List<Task>> findAll() async {
@@ -34,8 +47,19 @@ class Task {
 
       return tasks; // Mengembalikan list task
     } catch (e) {
-      print('Error fetching tasks: $e');
       return [];
+    }
+  }
+
+  Future<bool> save() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String? currentUid =
+        uid ?? db.collection('tasks').doc().id; // Generate if uid is null
+    try {
+      await db.collection('tasks').doc(currentUid).set(toMap());
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -52,13 +76,10 @@ class Task {
           .where('user_id', isEqualTo: currentUser?.uid)
           .get();
 
-      print("user name: ${currentUser?.email}");
-
       return snapshot.docs.map((doc) {
         return Task.fromMap(doc.data(), doc.id);
       }).toList();
     } catch (e) {
-      print('Error fetching tasks by category: $e');
       return [];
     }
   }
