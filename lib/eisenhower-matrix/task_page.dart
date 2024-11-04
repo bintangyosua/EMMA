@@ -51,11 +51,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     List<Category> res = await Category.findAll();
 
     if (res.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No category found'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No category found'),
+          ),
+        );
+      }
 
       return;
     }
@@ -93,15 +95,19 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         'reminder': Task.parseDateTime(_taskReminderController.text),
         'category_id': _taskCategoryController.text,
       }).then((value) {
-        widget.onTaskChanged();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Task saved")),
-        );
-        Navigator.pop(context); // Kembali setelah menyimpan
+        if (mounted) {
+          widget.onTaskChanged();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Task saved")),
+          );
+          Navigator.pop(context); // Kembali setelah menyimpan
+        }
       }).onError((handleError, stackTrace) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(handleError.toString())),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(handleError.toString())),
+          );
+        }
       });
     }
   }
@@ -193,7 +199,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                   labelText: 'Deadline',
                 ),
                 onTap: () async {
-                  print('_taskDeadline woi: ${widget.task.deadline}');
                   final DateTime? picked = await showDatePicker(
                     context: context,
                     initialDate: widget.task.deadline ?? DateTime.now(),

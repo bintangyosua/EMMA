@@ -1,4 +1,3 @@
-import 'package:emma/eisenhower-matrix/task-item.dart';
 import 'package:emma/models/category.dart';
 import 'package:emma/models/task.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +9,7 @@ import 'package:intl/intl.dart';
 class TaskModal extends StatefulWidget {
   final Function onTaskAdded;
 
-  const TaskModal({Key? key, required this.onTaskAdded}) : super(key: key);
+  const TaskModal({super.key, required this.onTaskAdded});
 
   @override
   _TaskModalState createState() => _TaskModalState();
@@ -30,7 +29,6 @@ class _TaskModalState extends State<TaskModal> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadCategory();
   }
@@ -75,7 +73,7 @@ class _TaskModalState extends State<TaskModal> {
               return null;
             },
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           DropdownButtonFormField<String>(
             validator: (value) {
               if (value == null) {
@@ -106,7 +104,7 @@ class _TaskModalState extends State<TaskModal> {
               }
             },
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           TextButton(
             child: const Text('Generate AI'),
             onPressed: () async {
@@ -124,12 +122,12 @@ class _TaskModalState extends State<TaskModal> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Alert'),
-                      content: Text(
+                      title: const Text('Alert'),
+                      content: const Text(
                           'Please enter a task name before generating AI description.'),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('OK'),
+                          child: const Text('OK'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

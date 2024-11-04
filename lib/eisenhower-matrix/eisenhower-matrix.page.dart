@@ -1,4 +1,3 @@
-import 'package:emma/eisenhower-matrix/task-item.dart';
 import 'package:emma/eisenhower-matrix/task_modal.dart';
 import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
@@ -17,7 +16,6 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadTasks();
   }
@@ -31,13 +29,6 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
     // Panggil `setState` hanya untuk memperbarui state setelah data diambil
     setState(() {
       _urgentImportantTasks = urgentImportantTasks;
-    });
-  }
-
-  void _toggleCrossOut(int index) {
-    setState(() {
-      _urgentImportantTasks[index].isCrossedOut =
-          !_urgentImportantTasks[index].isCrossedOut;
     });
   }
 
