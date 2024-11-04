@@ -79,10 +79,24 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   void _deleteTask() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Task deleted")),
-    );
-    Navigator.pop(context); // Kembali setelah penghapusan
+    // Attempt to delete the task
+    widget.task.delete().then((value) {
+      if (mounted) {
+        widget.onTaskChanged();
+        // Check if the widget is still mounted
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Task deleted")),
+        );
+        Navigator.pop(context); // Kembali setelah penghapusan
+      }
+    }).catchError((error) {
+      if (mounted) {
+        // Check if the widget is still mounted
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.toString())),
+        );
+      }
+    });
   }
 
   void _saveTask() {

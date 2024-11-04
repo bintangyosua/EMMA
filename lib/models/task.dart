@@ -46,6 +46,17 @@ class Task {
     }
   }
 
+  Future<bool> delete() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    try {
+      await db.collection('tasks').doc(uid).delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // Method untuk mengambil semua task dari Firestore
   static Future<List<Task>> findAll() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
