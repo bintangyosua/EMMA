@@ -10,7 +10,6 @@ class Task {
   final DateTime? reminder;
   final String? user_id;
   final String category_id;
-
   bool isCrossedOut;
 
   Task(
@@ -76,7 +75,6 @@ class Task {
       return [];
     }
   }
-
   Future<bool> save() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     String? currentUid =
