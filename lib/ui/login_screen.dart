@@ -1,4 +1,3 @@
-import 'package:emma/navigation-bar/navigation-bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
@@ -12,6 +11,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String _errorMessage = ''; // State variable for error message
 
   void login() async {
     try {
@@ -21,20 +21,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (userCredential.user != null) {
         // Login success -> Homepage
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const NavigationExample()),
-          );
-        }
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
       }
     } catch (e) {
-      // Error Message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Login failed. Please check your credentials."),
-        ));
-      }
+      // Set error message to show above the Sign In button
+      setState(() {
+        _errorMessage = "Login failed. Please check your credentials.";
+      });
     }
   }
 
@@ -61,6 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 50),
+
+                // Email input field
                 TextField(
                   controller: _emailController,
                   textAlign: TextAlign.center,
@@ -91,6 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
+
+                // Password input field
                 TextField(
                   controller: _passwordController,
                   textAlign: TextAlign.center,
@@ -121,7 +121,35 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
+
+                // Display error message with an exclamation mark
+                if (_errorMessage.isNotEmpty)
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.circle,
+                        size: 8,
+                        color: Color.fromARGB(255, 219, 12, 12),
+                      ),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          _errorMessage,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                const SizedBox(height: 15),
+
+                // Sign In button
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: SizedBox(
@@ -145,6 +173,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 15),
+
+                // Sign Up option
                 Row(
                   children: [
                     const Text(
@@ -186,4 +216,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
