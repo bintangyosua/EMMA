@@ -1,4 +1,5 @@
 import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
+import 'package:emma/ui/search.screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationExample extends StatefulWidget {
@@ -49,27 +50,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         EisenhowerMatrixPage(),
 
         /// Notifications page
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
+        const SearchScreen(),
 
         /// Messages page
         ListView.builder(
