@@ -45,30 +45,41 @@ class _NavigationExampleState extends State<NavigationExample> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+      backgroundColor: const Color(0xFFF3E5F5),
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor:
+              const Color(0xFFD1C4E9),
+          labelTextStyle: MaterialStateProperty.all(
+            const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.search_outlined)),
-            selectedIcon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.person_4_outlined)),
-            selectedIcon: Icon(Icons.person_4),
-            label: 'Profile',
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          backgroundColor: const Color.fromARGB(255, 225, 207, 255),
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home, color: Colors.black),
+              icon: Icon(Icons.home_outlined, color: Colors.black54),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.search, color: Colors.black),
+              icon: Icon(Icons.search_outlined, color: Colors.black54),
+              label: 'Search',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.person, color: Colors.black),
+              icon: Icon(Icons.person_outlined, color: Colors.black54),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
       body: <Widget>[
         EisenhowerMatrixPage(),
@@ -77,15 +88,27 @@ class _NavigationExampleState extends State<NavigationExample> {
           child: Column(
             children: <Widget>[
               Card(
+                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                ),
+                elevation: 5,
                 child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
+                  leading:
+                      Icon(Icons.notifications_sharp, color: Color(0xFF755DC1)),
                   title: Text('Notification 1'),
                   subtitle: Text('This is a notification'),
                 ),
               ),
               Card(
+                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                ),
+                elevation: 5,
                 child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
+                  leading:
+                      Icon(Icons.notifications_sharp, color: Color(0xFF755DC1)),
                   title: Text('Notification 2'),
                   subtitle: Text('This is a notification'),
                 ),
@@ -94,41 +117,106 @@ class _NavigationExampleState extends State<NavigationExample> {
           ),
         ),
         username != null
-            ? Padding(
+            ? SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Profile',
-                      style: theme.textTheme.headlineSmall,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/logo.png',
+                          height: 30,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'EMMA',
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 26.0,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16.0),
-                    ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text('Username'),
-                      subtitle: Text(username!),
+                    // Profile Text
+                    Center(
+                      child: Text(
+                        'Profile',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.email),
-                      title: const Text('Email'),
-                      subtitle: Text(email!),
+                    const SizedBox(height: 16.0),
+                    // Profile Icon
+                    Center(
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor:
+                            const Color.fromARGB(255, 101, 101, 101),
+                        child: const Icon(
+                          Icons.person,
+                          size: 60,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.lock),
-                      title: const Text('Password'),
-                      subtitle: Text(password!),
+                    const SizedBox(height: 16.0),
+                    // User Details
+                    Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        leading: const Icon(Icons.person, color: Color(0xFF755DC1)),
+                        title: const Text('Username'),
+                        subtitle: Text(username!),
+                      ),
+                    ),
+                    Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        leading: const Icon(Icons.email, color: Color(0xFF755DC1)),
+                        title: const Text('Email'),
+                        subtitle: Text(email!),
+                      ),
+                    ),
+                    Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        leading: const Icon(Icons.lock, color: Color(0xFF755DC1)),
+                        title: const Text('Password'),
+                        subtitle: Text(password!),
+                      ),
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UpdateProfilePage()),
-                        );
-                      },
-                      child: Text("Update Profile"),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF9F7BFF),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 32,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UpdateProfilePage()),
+                          );
+                        },
+                        child: const Text(
+                          "Update Profile",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
                     ),
                   ],
                 ),

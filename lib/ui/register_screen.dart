@@ -84,7 +84,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Input fields dengan ikon
               Column(
                 children: [
                   _buildInputField(
@@ -134,7 +133,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               const SizedBox(height: 20),
-              // Tombol "Create Account"
               SizedBox(
                 width: double.infinity,
                 height: 56,

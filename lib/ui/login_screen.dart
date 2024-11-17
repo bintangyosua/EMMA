@@ -74,12 +74,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Color(0xFF755DC1),
                     fontSize: 32,
                     fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold, // Teks ditebalkan
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              // Inputan dengan ikon
               _buildInputField(
                 controller: _emailController,
                 label: 'Email',
@@ -115,7 +114,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               const SizedBox(height: 20),
-              // Tombol "Sign In"
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -139,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              // Teks "Don't have an account?" di tengah
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -168,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Color(0xFF755DC1),
                         fontSize: 13,
                         fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold, // Teks ditebalkan
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
