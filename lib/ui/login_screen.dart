@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'homepage.dart';
+import 'package:emma/navigation-bar/navigation-bar.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,21 +15,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void login() async {
     try {
+      // Attempt to sign in the user with the provided email and password
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text);
+              email: _emailController.text.trim(),
+              password: _passwordController.text);
 
       if (userCredential.user != null) {
-        // Login success -> Homepage
+        // Successful login -> Navigate to NavigationExample
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => NavigationExample()),
         );
       }
-    } catch (e) {
-      // Set error message to show above the Sign In button
+    } on FirebaseAuthException catch (e) {
+      // Handle Firebase-specific authentication errors
       setState(() {
-        _errorMessage = "Login failed. Please check your credentials.";
+        if (e.code == 'user-not-found') {
+          _errorMessage = "No user found with this email.";
+        } else if (e.code == 'wrong-password') {
+          _errorMessage = "Incorrect password. Please try again.";
+        } else if (e.code == 'invalid-email') {
+          _errorMessage = "Invalid email format.";
+        } else {
+          _errorMessage = "Login failed. Please try again.";
+        }
+      });
+    } catch (e) {
+      // General error catch block for any other errors
+      setState(() {
+        _errorMessage = "An unexpected error occurred. Please try again.";
       });
     }
   }

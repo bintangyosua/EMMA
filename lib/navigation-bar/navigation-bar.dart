@@ -1,5 +1,8 @@
 import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emma/navigation-bar/update_profile.dart';
 
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
@@ -11,6 +14,33 @@ class NavigationExample extends StatefulWidget {
 class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
 
+  String? username;
+  String? email;
+  String? password;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      setState(() {
+        username = userDoc['name'];
+        email = userDoc['email'];
+        password = userDoc['password'];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -21,7 +51,6 @@ class _NavigationExampleState extends State<NavigationExample> {
             currentPageIndex = index;
           });
         },
-        // indicatorColor: const Color.fromARGB(255, 155, 162, 203),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
@@ -35,20 +64,14 @@ class _NavigationExampleState extends State<NavigationExample> {
             label: 'Search',
           ),
           NavigationDestination(
-            icon: Badge(
-              // label: Text('2'),
-              child: Icon(Icons.person_4_outlined),
-            ),
+            icon: Badge(child: Icon(Icons.person_4_outlined)),
             selectedIcon: Icon(Icons.person_4),
             label: 'Profile',
           ),
         ],
       ),
       body: <Widget>[
-        /// Home page
         EisenhowerMatrixPage(),
-
-        /// Notifications page
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Column(
@@ -70,48 +93,47 @@ class _NavigationExampleState extends State<NavigationExample> {
             ],
           ),
         ),
-
-        /// Messages page
-        ListView.builder(
-          reverse: true,
-          itemCount: 2,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    'Hello',
-                    style: theme.textTheme.bodyLarge!
-                        .copyWith(color: theme.colorScheme.onPrimary),
-                  ),
+        username != null
+            ? Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Profile',
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 16.0),
+                    ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text('Username'),
+                      subtitle: Text(username!),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.email),
+                      title: const Text('Email'),
+                      subtitle: Text(email!),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.lock),
+                      title: const Text('Password'),
+                      subtitle: Text(password!),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UpdateProfilePage()),
+                        );
+                      },
+                      child: Text("Update Profile"),
+                    ),
+                  ],
                 ),
-              );
-            }
-            return Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.all(8.0),
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  'Hi!',
-                  style: theme.textTheme.bodyLarge!
-                      .copyWith(color: theme.colorScheme.onPrimary),
-                ),
-              ),
-            );
-          },
-        ),
+              )
+            : const Center(child: CircularProgressIndicator()),
       ][currentPageIndex],
     );
   }
