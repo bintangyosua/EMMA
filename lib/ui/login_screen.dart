@@ -15,21 +15,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void login() async {
     try {
-      // Attempt to sign in the user with the provided email and password
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
 
       if (userCredential.user != null) {
-        // Successful login -> Navigate to NavigationExample
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => NavigationExample()),
         );
       }
     } on FirebaseAuthException catch (e) {
-      // Handle Firebase-specific authentication errors
       setState(() {
         if (e.code == 'user-not-found') {
           _errorMessage = "No user found with this email.";
@@ -42,7 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       });
     } catch (e) {
-      // General error catch block for any other errors
       setState(() {
         _errorMessage = "An unexpected error occurred. Please try again.";
       });
@@ -53,180 +50,178 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 18),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 60),
+              Center(
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  height: 150,
+                  width: 150,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 30),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text(
                   'Log In',
                   style: TextStyle(
                     color: Color(0xFF755DC1),
-                    fontSize: 27,
+                    fontSize: 32,
                     fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold, // Teks ditebalkan
                   ),
                 ),
-                const SizedBox(height: 50),
-
-                // Email input field
-                TextField(
-                  controller: _emailController,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF393939),
-                    fontSize: 13,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                  ),
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyle(
-                      color: Color(0xFF755DC1),
-                      fontSize: 15,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide:
-                          BorderSide(width: 1, color: Color(0xFF837E93)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide:
-                          BorderSide(width: 1, color: Color(0xFF9F7BFF)),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-
-                // Password input field
-                TextField(
-                  controller: _passwordController,
-                  textAlign: TextAlign.center,
-                  obscureText: true,
-                  style: const TextStyle(
-                    color: Color(0xFF393939),
-                    fontSize: 13,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                  ),
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: TextStyle(
-                      color: Color(0xFF755DC1),
-                      fontSize: 15,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide:
-                          BorderSide(width: 1, color: Color(0xFF837E93)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide:
-                          BorderSide(width: 1, color: Color(0xFF9F7BFF)),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Display error message with an exclamation mark
-                if (_errorMessage.isNotEmpty)
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.circle,
-                        size: 8,
-                        color: Color.fromARGB(255, 219, 12, 12),
-                      ),
-                      const SizedBox(width: 5),
-                      Expanded(
-                        child: Text(
-                          _errorMessage,
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                const SizedBox(height: 15),
-
-                // Sign In button
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: SizedBox(
-                    width: 329,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: login,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF9F7BFF),
-                      ),
-                      child: const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15),
-
-                // Sign Up option
+              ),
+              const SizedBox(height: 20),
+              // Inputan dengan ikon
+              _buildInputField(
+                controller: _emailController,
+                label: 'Email',
+                hint: 'Input your email address',
+                icon: Icons.email,
+              ),
+              const SizedBox(height: 20),
+              _buildInputField(
+                controller: _passwordController,
+                label: 'Password',
+                hint: 'Enter your password',
+                icon: Icons.lock,
+                obscureText: true,
+              ),
+              const SizedBox(height: 10),
+              // Pesan error
+              if (_errorMessage.isNotEmpty)
                 Row(
                   children: [
-                    const Text(
-                      'Don’t have an account?',
-                      style: TextStyle(
-                        color: Color(0xFF837E93),
-                        fontSize: 13,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(width: 2.5),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterScreen()),
-                        );
-                      },
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Color(0xFF755DC1),
-                          fontSize: 13,
+                    const Icon(Icons.error_outline,
+                        size: 16, color: Colors.red),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        _errorMessage,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
                           fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 15),
-              ],
-            ),
+              const SizedBox(height: 20),
+              // Tombol "Sign In"
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: login,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF9F7BFF),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              // Teks "Don't have an account?" di tengah
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Don’t have an account?',
+                    style: TextStyle(
+                      color: Color(0xFF837E93),
+                      fontSize: 13,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: Color(0xFF755DC1),
+                        fontSize: 13,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold, // Teks ditebalkan
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required IconData icon,
+    bool obscureText = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: const TextStyle(
+        color: Color(0xFF393939),
+        fontSize: 13,
+        fontFamily: 'Poppins',
+        fontWeight: FontWeight.w400,
+      ),
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: Color(0xFF755DC1)),
+        filled: true,
+        fillColor: Colors.white,
+        labelText: label,
+        hintText: hint,
+        hintStyle: const TextStyle(
+          color: Color(0xFF837E93),
+          fontSize: 10,
+          fontFamily: 'Poppins',
+        ),
+        labelStyle: const TextStyle(
+          color: Color(0xFF755DC1),
+          fontSize: 15,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.w600,
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderSide: BorderSide(width: 1, color: Color(0xFF837E93)),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderSide: BorderSide(width: 1, color: Color(0xFF9F7BFF)),
+        ),
       ),
     );
   }
