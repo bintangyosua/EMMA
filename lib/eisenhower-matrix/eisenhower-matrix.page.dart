@@ -24,11 +24,69 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
   void _loadTasks() async {
     List<Task> urgentImportantTasks =
         await Task.findTasksByCategory('uw0sLWpsSWYFPfeTbijO');
-    
+    List<Task> notUrgentImportantTasks =
+        await Task.findTasksByCategory('Pnkb6VLOhryAjrwCOyes');
+    List<Task> urgentNotImportantTasks =
+        await Task.findTasksByCategory('cl0BxRTOXKkS2DmO0DC8');
+    List<Task> notUrgentNotImportantTasks =
+        await Task.findTasksByCategory('qUPKuIqJioKvZO8qYD3L');
+
     setState(() {
       _urgentImportantTasks = urgentImportantTasks;
-
+      _notUrgentImportantTasks = notUrgentImportantTasks;
+      _urgentNotImportantTasks = urgentNotImportantTasks;
+      _notUrgentNotImportantTasks = notUrgentNotImportantTasks;
     });
+  }
+
+  Widget buildTaskList(List<Task> tasks, String title) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(),
+        color: const Color(0xffF0ECE5),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                final task = tasks[index];
+                return ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TaskDetailPage(
+                            task: tasks[index],
+                            onTaskChanged: () => _loadTasks()),
+                      ),
+                    );
+                  },
+                  title: Text(
+                    task.name.length > 30
+                        ? '${task.name.substring(0, 20)}...'
+                        : task.name,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  dense: true,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -57,70 +115,9 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
           Expanded(
             child: Column(
               children: [
+                Expanded(child: buildTaskList(_urgentImportantTasks, 'Do Now')),
                 Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          color: const Color(0xffF0ECE5),
-                        ),
-                        child: Column(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                'Do Now',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: _urgentImportantTasks.length,
-                                itemBuilder: (context, index) {
-                                  final task = _urgentImportantTasks[index];
-                                  return ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => TaskDetailPage(
-                                              task:
-                                                  _urgentImportantTasks[index],
-                                              onTaskChanged: () =>
-                                                  _loadTasks()),
-                                        ),
-                                      );
-                                    },
-                                    title: Text(
-                                      task.name.length > 30
-                                          ? '${task.name.substring(0, 20)}...'
-                                          : task.name,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    dense: true,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      color: const Color(0xffB6BBC4),
-                    ),
-                    child: const Center(child: Text('Not Urgent & Important')),
-                  ),
-                ),
+                    child: buildTaskList(_urgentNotImportantTasks, 'Delegate')),
               ],
             ),
           ),
@@ -128,37 +125,10 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      color: const Color(0xff31304D),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Urgent & Not Important',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                    child: buildTaskList(_notUrgentImportantTasks, 'Decide')),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      color: const Color(0xff161A30),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Not Urgent & Not Important',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                    child:
+                        buildTaskList(_notUrgentNotImportantTasks, 'Postpone')),
               ],
             ),
           ),
