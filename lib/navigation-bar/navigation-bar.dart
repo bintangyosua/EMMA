@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emma/navigation-bar/update_profile.dart';
+import 'package:emma/ui/login_screen.dart'; // Import your login page
 
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
@@ -48,8 +49,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       backgroundColor: const Color(0xFFF3E5F5),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor:
-              const Color(0xFFD1C4E9),
+          indicatorColor: const Color(0xFFD1C4E9),
           labelTextStyle: MaterialStateProperty.all(
             const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
@@ -171,7 +171,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                     Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        leading: const Icon(Icons.person, color: Color(0xFF755DC1)),
+                        leading:
+                            const Icon(Icons.person, color: Color(0xFF755DC1)),
                         title: const Text('Username'),
                         subtitle: Text(username!),
                       ),
@@ -179,7 +180,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                     Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        leading: const Icon(Icons.email, color: Color(0xFF755DC1)),
+                        leading:
+                            const Icon(Icons.email, color: Color(0xFF755DC1)),
                         title: const Text('Email'),
                         subtitle: Text(email!),
                       ),
@@ -187,35 +189,77 @@ class _NavigationExampleState extends State<NavigationExample> {
                     Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        leading: const Icon(Icons.lock, color: Color(0xFF755DC1)),
+                        leading:
+                            const Icon(Icons.lock, color: Color(0xFF755DC1)),
                         title: const Text('Password'),
                         subtitle: Text(password!),
                       ),
                     ),
                     const SizedBox(height: 20),
                     Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF9F7BFF),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 32,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width:
+                                200, // Set the width to ensure both buttons are the same size
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF9F7BFF),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 32,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          UpdateProfilePage()),
+                                );
+                              },
+                              child: const Text(
+                                "Update Profile",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
+                          const SizedBox(
+                              height: 20), // Add some spacing between buttons
+                          SizedBox(
+                            width:
+                                200, // Set the width to ensure both buttons are the same size
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF9F7BFF),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 32,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          LoginScreen()), // Replace with your login page
+                                );
+                              },
+                              child: const Text(
+                                "Log Out",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UpdateProfilePage()),
-                          );
-                        },
-                        child: const Text(
-                          "Update Profile",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
+                        ],
                       ),
                     ),
                   ],
