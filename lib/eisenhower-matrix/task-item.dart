@@ -32,6 +32,7 @@ class _TaskItemState extends State<TaskItem> {
         style: TextStyle(
           decoration: _isChecked ? TextDecoration.lineThrough : null,
         ),
+        overflow: TextOverflow.ellipsis,
       ),
       onTap: () {
         setState(() {
@@ -45,3 +46,4 @@ class _TaskItemState extends State<TaskItem> {
     );
   }
 }
+

@@ -192,7 +192,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                         leading:
                             const Icon(Icons.lock, color: Color(0xFF755DC1)),
                         title: const Text('Password'),
-                        subtitle: Text(password!),
+                        subtitle: Text('*************'),
                       ),
                     ),
                     const SizedBox(height: 20),

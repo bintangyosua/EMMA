@@ -1,3 +1,4 @@
+import 'package:emma/eisenhower-matrix/task_create.dart';
 import 'package:emma/eisenhower-matrix/task_modal.dart';
 import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
@@ -172,11 +173,12 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return TaskModal(
-                onTaskAdded: () {
-                  _loadTasks();
-                },
-              );
+              // return TaskModal(
+              //   onTaskAdded: () {
+              //     _loadTasks();
+              //   },
+              // );
+              return TaskCreatePage(onTaskChanged: () => _loadTasks());
             },
           );
         },
@@ -215,7 +217,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                     child: buildTaskList(
                       _notUrgentImportantTasks,
                       'Decide',
-                      'Schedule a time to do it',
+                      'Schedule a time',
                       const Color.fromARGB(255, 15, 214, 249),
                     ),
                   ),
