@@ -217,7 +217,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                     child: buildTaskList(
                       _notUrgentImportantTasks,
                       'Decide',
-                      'Schedule a time to do it',
+                      'Schedule a time',
                       const Color.fromARGB(255, 15, 214, 249),
                     ),
                   ),
