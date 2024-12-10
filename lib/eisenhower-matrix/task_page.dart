@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emma/colors.dart';
 import 'package:emma/models/category.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
@@ -79,11 +80,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   void _deleteTask() {
-    // Attempt to delete the task
     widget.task.delete().then((value) {
       if (mounted) {
         widget.onTaskChanged();
-        // Check if the widget is still mounted
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Task deleted")),
         );
@@ -91,7 +90,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       }
     }).catchError((error) {
       if (mounted) {
-        // Check if the widget is still mounted
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error.toString())),
         );
@@ -101,7 +99,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   void _saveTask() {
     if (_formKey.currentState!.validate()) {
-      // Tambahkan logika penyimpanan di sini
       _firestore.collection('tasks').doc(widget.task.uid).update({
         'name': _taskNameController.text,
         'desc': _taskDescController.text,
@@ -130,9 +127,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Task Details"),
+        backgroundColor: AppColors.color2,
+        title: const Text(
+          "Task Details",
+          style: TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -150,121 +151,157 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              _buildTextFormField(
                 controller: _taskNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Task Name',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
+                labelText: 'Task Name',
+                icon: Icons.task,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter some text'
+                    : null,
               ),
               const SizedBox(height: 16.0),
-              DropdownButtonFormField<String>(
-                value: widget.task.category_id,
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select a category';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Select Category',
-                ),
-                items: categories
-                    .map<DropdownMenuItem<String>>((Category category) {
-                  return DropdownMenuItem<String>(
-                    value: category.uid, // Set `uid` as the value
-                    child: Text(category.name), // Show `name` in the UI
-                  );
-                }).toList(),
-                onChanged: (String? selectedUid) {
-                  if (selectedUid != null) {
-                    _taskCategoryController.text =
-                        selectedUid; // Update category
-                  }
-                },
-              ),
+              _buildDropdownButtonFormField(),
               const SizedBox(height: 16.0),
-              TextFormField(
+              _buildTextFormField(
                 controller: _taskDescController,
-                maxLines: 5, // Change to text area
-                decoration: const InputDecoration(
-                  labelText: 'Task Description',
-                  alignLabelWithHint: true,
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
+                labelText: 'Task Description',
+                maxLines: 5,
+                alignLabelWithHint: true,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter some text'
+                    : null,
               ),
-              TextFormField(
+              const SizedBox(height: 16.0),
+              _buildDatePickerTextField(
                 controller: _taskDeadlineController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Deadline',
-                ),
-                onTap: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: widget.task.deadline ?? DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2030),
-                    helpText: 'Select Deadline',
-                    errorFormatText: 'Enter valid date',
-                    errorInvalidText: 'Enter date in valid range',
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      _taskDeadline = picked;
-                      _taskDeadlineController.text =
-                          DateFormat('dd/MM/yyyy').format(_taskDeadline!);
-                    });
-                  }
+                labelText: 'Deadline',
+                onDateSelected: (date) {
+                  setState(() {
+                    _taskDeadline = date;
+                    _taskDeadlineController.text =
+                        DateFormat('dd/MM/yyyy').format(_taskDeadline!);
+                  });
                 },
               ),
-              TextFormField(
+              const SizedBox(height: 16.0),
+              _buildDatePickerTextField(
                 controller: _taskReminderController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Reminder',
-                ),
-                onTap: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: widget.task.reminder ?? DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2030),
-                    helpText: 'Select Reminder',
-                    errorFormatText: 'Enter valid date',
-                    errorInvalidText: 'Enter date in valid range',
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      _taskReminder = picked;
-                      _taskReminderController.text =
-                          DateFormat('dd/MM/yyyy').format(_taskReminder!);
-                    });
-                  }
+                labelText: 'Reminder',
+                onDateSelected: (date) {
+                  setState(() {
+                    _taskReminder = date;
+                    _taskReminderController.text =
+                        DateFormat('dd/MM/yyyy').format(_taskReminder!);
+                  });
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveTask,
-                child: const Text('Save'),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.color2,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: _saveTask,
+                  child: const Text(
+                    'Save Task',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String labelText,
+    IconData? icon,
+    int maxLines = 1,
+    bool alignLabelWithHint = false,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: icon != null ? Icon(icon) : null,
+        alignLabelWithHint: alignLabelWithHint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      validator: validator,
+    );
+  }
+
+  Widget _buildDropdownButtonFormField() {
+    return DropdownButtonFormField<String>(
+      validator: (value) => value == null ? 'Please select a category' : null,
+      value: widget.task.category_id,
+      decoration: InputDecoration(
+        labelText: 'Select Category',
+        prefixIcon: Icon(Icons.category),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      items: categories.map<DropdownMenuItem<String>>((Category category) {
+        return DropdownMenuItem<String>(
+          value: category.uid,
+          child: Text(category.name),
+        );
+      }).toList(),
+      onChanged: (String? selectedUid) {
+        if (selectedUid == null) {
+          _taskCategoryController.text = 'Do Now';
+        } else {
+          final selectedCategory = categories.firstWhere(
+            (category) => category.uid == selectedUid,
+          );
+          _taskCategoryController.text = selectedCategory.uid;
+        }
+      },
+    );
+  }
+
+  Widget _buildDatePickerTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required Function(DateTime) onDateSelected,
+  }) {
+    return TextFormField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: Icon(Icons.date_range),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      onTap: () async {
+        final DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime.now(),
+          lastDate: DateTime(2030),
+          helpText: 'Select $labelText',
+          errorFormatText: 'Enter valid date',
+          errorInvalidText: 'Enter date in valid range',
+        );
+        if (pickedDate != null) {
+          onDateSelected(pickedDate);
+        }
+      },
     );
   }
 }

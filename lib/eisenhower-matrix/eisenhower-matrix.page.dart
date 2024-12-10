@@ -1,5 +1,5 @@
+import 'package:emma/colors.dart';
 import 'package:emma/eisenhower-matrix/task_create.dart';
-import 'package:emma/eisenhower-matrix/task_modal.dart';
 import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +60,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w900,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -69,7 +69,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                           style: const TextStyle(
                             fontSize: 16,
                             fontStyle: FontStyle.italic,
-                            color: Color.fromARGB(137, 0, 0, 0),
+                            color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -89,7 +89,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w900,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -98,7 +98,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontStyle: FontStyle.italic,
-                                  color: Color.fromARGB(137, 0, 0, 0),
+                                  color: Colors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -149,7 +149,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF3E5F5),
+        backgroundColor: Colors.white,
         title: Row(
           children: [
             Image.asset(
@@ -169,15 +169,11 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.color1,
         onPressed: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              // return TaskModal(
-              //   onTaskAdded: () {
-              //     _loadTasks();
-              //   },
-              // );
               return TaskCreatePage(onTaskChanged: () => _loadTasks());
             },
           );
@@ -185,7 +181,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
         child: const Icon(Icons.add),
       ),
       body: Container(
-        color: const Color(0xFFF3E5F5),
+        color: Colors.white,
         child: Row(
           children: [
             Expanded(
@@ -196,7 +192,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                       _urgentImportantTasks,
                       'Do Now',
                       'Do it Now.',
-                      const Color.fromARGB(255, 69, 225, 74),
+                      AppColors.color1,
                     ),
                   ),
                   Expanded(
@@ -204,7 +200,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                       _urgentNotImportantTasks,
                       'Delegate',
                       'Who can do it for you?',
-                      const Color.fromARGB(255, 255, 39, 24),
+                      AppColors.color2,
                     ),
                   ),
                 ],
@@ -218,7 +214,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                       _notUrgentImportantTasks,
                       'Decide',
                       'Schedule a time',
-                      const Color.fromARGB(255, 15, 214, 249),
+                      AppColors.color3,
                     ),
                   ),
                   Expanded(
@@ -226,7 +222,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                       _notUrgentNotImportantTasks,
                       'Postpone',
                       'Eliminate it',
-                      Colors.grey,
+                      AppColors.color4,
                     ),
                   ),
                 ],

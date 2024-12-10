@@ -1,3 +1,4 @@
+import 'package:emma/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -76,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: const Text(
                   'Sign Up',
                   style: TextStyle(
-                    color: Color(0xFF755DC1),
+                    color: AppColors.color2,
                     fontSize: 28,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w900,
@@ -139,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: ElevatedButton(
                   onPressed: register,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF9F7BFF),
+                    backgroundColor: AppColors.color2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -180,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: const Text(
                       'Log In',
                       style: TextStyle(
-                        color: Color(0xFF755DC1),
+                        color: AppColors.color2,
                         fontSize: 13,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w600,
@@ -214,7 +215,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         fontWeight: FontWeight.w400,
       ),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Color(0xFF755DC1)),
+        prefixIcon: Icon(icon, color: AppColors.color2),
         filled: true,
         fillColor: Colors.white,
         labelText: label,
@@ -226,7 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           fontWeight: FontWeight.w400,
         ),
         labelStyle: const TextStyle(
-          color: Color(0xFF755DC1),
+          color: AppColors.color2,
           fontSize: 15,
           fontFamily: 'Poppins',
           fontWeight: FontWeight.w600,
