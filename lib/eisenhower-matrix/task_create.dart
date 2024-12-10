@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emma/colors.dart';
 import 'package:emma/models/category.dart';
 import 'package:emma/models/task.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +13,8 @@ final _firestore = FirebaseFirestore.instance;
 class TaskCreatePage extends StatefulWidget {
   final Function onTaskChanged;
 
-  const TaskCreatePage({super.key, required this.onTaskChanged});
+  const TaskCreatePage({Key? key, required this.onTaskChanged})
+      : super(key: key);
 
   @override
   _TaskCreatePageState createState() => _TaskCreatePageState();
@@ -34,20 +36,18 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   DateTime? _taskDeadline;
   DateTime? _taskReminder;
 
-  List<Category> categories =
-      []; // Ganti dengan daftar kategori yang Anda miliki
+  List<Category> _categories = [];
 
   @override
   void initState() {
     super.initState();
-    _loadCategory();
+    _loadCategories();
   }
 
-  void _loadCategory() async {
-    // Ambil task berdasarkan kategori tanpa `setState` terlebih dahulu
-    List<Category> res = await Category.findAll();
+  Future<void> _loadCategories() async {
+    final categories = await Category.findAll();
 
-    if (res.isEmpty) {
+    if (categories.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -58,9 +58,8 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
       return;
     }
 
-    // Panggil `setState` hanya untuk memperbarui state setelah data diambil
     setState(() {
-      categories = res;
+      _categories = categories;
     });
   }
 
@@ -77,7 +76,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
   void _saveTask() {
     if (_formKey.currentState!.validate()) {
       User currentUser = FirebaseAuth.instance.currentUser!;
-      Task newTask = Task(
+      final newTask = Task(
         name: _taskNameController.text,
         desc: _taskDescController.text,
         category_id: _taskCategoryController.text,
@@ -93,7 +92,7 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
           _taskReminder == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Semua field wajib diisi'),
+            content: Text('Every tasks must not be empty'),
           ),
         );
         return; // Exit the function if any field is empty
@@ -122,10 +121,19 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create New Task"),
+        backgroundColor: AppColors.color2,
+        title: const Text(
+          "Create New Task",
+          style: TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -136,92 +144,32 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Task Name Text Field
-              _buildTextField(
+              _buildTextFormField(
                 controller: _taskNameController,
-                label: 'Task Name',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
+                labelText: 'Task Name',
+                icon: Icons.task,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter some text'
+                    : null,
               ),
               const SizedBox(height: 16.0),
-
-              // Category Dropdown
-              _buildDropdownField(
-                label: 'Select Category',
-                valueController: _taskCategoryController,
-                items: categories
-                    .map<DropdownMenuItem<String>>((Category category) {
-                  return DropdownMenuItem<String>(
-                    value: category.uid, // Set `uid` as the value
-                    child: Text(category.name), // Show `name` in the UI
-                  );
-                }).toList(),
-                onChanged: (String? selectedUid) {
-                  if (selectedUid != null) {
-                    _taskCategoryController.text = selectedUid;
-                  }
-                },
-              ),
+              _buildDropdownButtonFormField(),
               const SizedBox(height: 16.0),
-
-              // AI Generate Button
-              ElevatedButton.icon(
-                onPressed: () async {
-                  if (_taskNameController.text.isNotEmpty) {
-                    final model = GenerativeModel(
-                        model: 'gemini-1.5-flash',
-                        apiKey: dotenv.env['GEMINI_API_KEY'] ?? '');
-                    final response = await model.generateContent([
-                      Content.text(
-                          'Create a short description for the task named "${_taskNameController.text}". Describe its purpose, key steps, and expected outcomes.')
-                    ]);
-                    _taskDescController.text = '${response.text}';
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Alert'),
-                          content: const Text(
-                              'Please enter a task name before generating AI description.'),
-                          actions: [
-                            TextButton(
-                              child: const Text('OK'),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
-                icon: const Icon(Icons.smart_toy),
-                label: const Text('Generate AI'),
-              ),
+              _buildGenerateAiButton(context),
               const SizedBox(height: 16.0),
-
-              // Task Description Text Field
-              _buildTextField(
+              _buildTextFormField(
                 controller: _taskDescController,
-                label: 'Task Description',
+                labelText: 'Task Description',
                 maxLines: 5,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
+                alignLabelWithHint: true,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter some text'
+                    : null,
               ),
               const SizedBox(height: 16.0),
-
-              // Deadline Date Picker
-              _buildDateField(
+              _buildDatePickerTextField(
                 controller: _taskDeadlineController,
-                label: 'Deadline',
+                labelText: 'Deadline',
                 onDateSelected: (date) {
                   setState(() {
                     _taskDeadline = date;
@@ -231,11 +179,9 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                 },
               ),
               const SizedBox(height: 16.0),
-
-              // Reminder Date Picker
-              _buildDateField(
+              _buildDatePickerTextField(
                 controller: _taskReminderController,
-                label: 'Reminder',
+                labelText: 'Reminder',
                 onDateSelected: (date) {
                   setState(() {
                     _taskReminder = date;
@@ -245,17 +191,21 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                 },
               ),
               const SizedBox(height: 20),
-
-              // Save Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _saveTask,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF9F7BFF), // Warna tombol
-                    foregroundColor: Colors.white, // Warna teks tombol
+                    backgroundColor: AppColors.color2,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: const Text('Save'),
+                  onPressed: _saveTask,
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],
@@ -265,76 +215,128 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
     );
   }
 
-  // Widget to create text fields with full width
-  Widget _buildTextField({
+  Widget _buildTextFormField({
     required TextEditingController controller,
-    required String label,
+    required String labelText,
+    IconData? icon,
     int maxLines = 1,
+    bool alignLabelWithHint = false,
     String? Function(String?)? validator,
   }) {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
       decoration: InputDecoration(
-        labelText: label,
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        labelText: labelText,
+        prefixIcon: icon != null ? Icon(icon) : null,
+        alignLabelWithHint: alignLabelWithHint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
       validator: validator,
     );
   }
 
-  // Widget for Dropdown fields with full width
-  Widget _buildDropdownField({
-    required String label,
-    required TextEditingController valueController,
-    required List<DropdownMenuItem<String>> items,
-    required ValueChanged<String?> onChanged,
-  }) {
+  Widget _buildDropdownButtonFormField() {
     return DropdownButtonFormField<String>(
-      validator: (value) {
-        if (value == null) {
-          return 'Please select a category';
-        }
-        return null;
-      },
+      validator: (value) => value == null ? 'Please select a category' : null,
       decoration: InputDecoration(
-        labelText: label,
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        labelText: 'Select Category',
+        prefixIcon: Icon(Icons.category),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
-      items: items,
-      onChanged: onChanged,
+      items: _categories.map<DropdownMenuItem<String>>((Category category) {
+        return DropdownMenuItem<String>(
+          value: category.uid,
+          child: Text(category.name),
+        );
+      }).toList(),
+      onChanged: (String? selectedUid) {
+        if (selectedUid == null) {
+          _taskCategoryController.text = 'Do Now';
+        } else {
+          final selectedCategory = _categories.firstWhere(
+            (category) => category.uid == selectedUid,
+          );
+          _taskCategoryController.text = selectedCategory.uid;
+        }
+      },
     );
   }
 
-  // Widget to create date picker fields
-  Widget _buildDateField({
+  Widget _buildGenerateAiButton(BuildContext context) {
+    return TextButton(
+      child: const Text('Generate AI'),
+      onPressed: () async {
+        if (_taskNameController.text.isNotEmpty) {
+          final model = GenerativeModel(
+            model: 'gemini-1.5-flash',
+            apiKey: dotenv.env['GEMINI_API_KEY'] ?? '',
+          );
+          final response = await model.generateContent([
+            Content.text(
+                'Create a short description for the task named "${_taskNameController.text}". Describe its purpose, key steps, and expected outcomes.')
+          ]);
+          _taskDescController.text = '${response.text}';
+        } else {
+          _showAlertDialog(context, 'Alert',
+              'Please enter a task name before generating AI description.');
+        }
+      },
+    );
+  }
+
+  Widget _buildDatePickerTextField({
     required TextEditingController controller,
-    required String label,
-    required ValueChanged<DateTime> onDateSelected,
+    required String labelText,
+    required Function(DateTime) onDateSelected,
   }) {
     return TextFormField(
       controller: controller,
       readOnly: true,
       decoration: InputDecoration(
-        labelText: label,
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        labelText: labelText,
+        prefixIcon: Icon(Icons.date_range),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
       onTap: () async {
-        final DateTime? picked = await showDatePicker(
+        final DateTime? pickedDate = await showDatePicker(
           context: context,
           initialDate: DateTime.now(),
           firstDate: DateTime.now(),
           lastDate: DateTime(2030),
+          helpText: 'Select $labelText',
+          errorFormatText: 'Enter valid date',
+          errorInvalidText: 'Enter date in valid range',
         );
-        if (picked != null) {
-          onDateSelected(picked);
+        if (pickedDate != null) {
+          onDateSelected(pickedDate);
         }
+      },
+    );
+  }
+
+  void _showAlertDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
       },
     );
   }

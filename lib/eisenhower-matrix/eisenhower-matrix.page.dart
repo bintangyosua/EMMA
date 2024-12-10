@@ -1,5 +1,5 @@
+import 'package:emma/colors.dart';
 import 'package:emma/eisenhower-matrix/task_create.dart';
-import 'package:emma/eisenhower-matrix/task_modal.dart';
 import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
@@ -47,42 +47,62 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.all(8.0),
-      child: Center(
-        child: tasks.isEmpty
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+      child: Column(
+        children: [
+          Expanded(
+            child: tasks.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              )
-            : ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TaskDetailPage(
-                            task: tasks[index],
-                            onTaskChanged: () => _loadTasks(),
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                title,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                subtitle,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -103,7 +123,6 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
         title: Row(
           children: [
             Image.asset(
@@ -124,6 +143,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.color1,
         onPressed: () {
           showDialog(
             context: context,
@@ -145,16 +165,16 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                     child: buildTaskList(
                       _urgentImportantTasks,
                       'Do Now',
-                      'Tasks to be done immediately.',
-                      Colors.redAccent,
+                      'Do it Now.',
+                      AppColors.color1,
                     ),
                   ),
                   Expanded(
                     child: buildTaskList(
                       _urgentNotImportantTasks,
                       'Delegate',
-                      'Assign to someone else.',
-                      Colors.orangeAccent,
+                      'Who can do it for you?',
+                      AppColors.color2,
                     ),
                   ),
                 ],
@@ -167,16 +187,16 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                     child: buildTaskList(
                       _notUrgentImportantTasks,
                       'Decide',
-                      'Schedule a time to do it.',
-                      Colors.blueAccent,
+                      'Schedule a time',
+                      AppColors.color3,
                     ),
                   ),
                   Expanded(
                     child: buildTaskList(
                       _notUrgentNotImportantTasks,
-                      'Eliminate',
-                      'Consider removing it.',
-                      Colors.greenAccent,
+                      'Postpone',
+                      'Eliminate it',
+                      AppColors.color4,
                     ),
                   ),
                 ],

@@ -1,3 +1,4 @@
+import 'package:emma/colors.dart';
 import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,13 +50,13 @@ class _NavigationExampleState extends State<NavigationExample> {
       backgroundColor: Colors.white, // Set the entire background to white
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: const Color(0xFFD1C4E9),
+          indicatorColor: AppColors.color1,
           labelTextStyle: MaterialStateProperty.all(
             const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ),
         child: NavigationBar(
-          backgroundColor: const Color.fromARGB(255, 225, 207, 255),
+          backgroundColor: Colors.white,
           onDestinationSelected: (int index) {
             setState(() {
               currentPageIndex = index;
@@ -99,7 +100,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                 elevation: 3, // Minimal elevation for a sleek look
                 child: ListTile(
                   leading:
-                      Icon(Icons.notifications_sharp, color: Color(0xFF755DC1)),
+                      Icon(Icons.notifications_sharp, color: AppColors.color2),
                   title: Text('Notification 1'),
                   subtitle: Text('This is a notification'),
                 ),
@@ -113,7 +114,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                 elevation: 3, // Minimal elevation for a sleek look
                 child: ListTile(
                   leading:
-                      Icon(Icons.notifications_sharp, color: Color(0xFF755DC1)),
+                      Icon(Icons.notifications_sharp, color: AppColors.color2),
                   title: Text('Notification 2'),
                   subtitle: Text('This is a notification'),
                 ),
@@ -174,28 +175,31 @@ class _NavigationExampleState extends State<NavigationExample> {
                     const SizedBox(height: 16.0),
                     // User Details
                     Card(
+                      color: Colors.white,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
                         leading:
-                            const Icon(Icons.person, color: Color(0xFF755DC1)),
+                            const Icon(Icons.person, color: AppColors.color2),
                         title: const Text('Username'),
                         subtitle: Text(username!),
                       ),
                     ),
                     Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      color: Colors.white,
                       child: ListTile(
                         leading:
-                            const Icon(Icons.email, color: Color(0xFF755DC1)),
+                            const Icon(Icons.email, color: AppColors.color2),
                         title: const Text('Email'),
                         subtitle: Text(email!),
                       ),
                     ),
                     Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      color: Colors.white,
                       child: ListTile(
                         leading:
-                            const Icon(Icons.lock, color: Color(0xFF755DC1)),
+                            const Icon(Icons.lock, color: AppColors.color2),
                         title: const Text('Password'),
                         subtitle: Text('*************'),
                       ),
@@ -209,7 +213,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                                 200, // Set the width to ensure both buttons are the same size
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF9F7BFF),
+                                backgroundColor: AppColors.color2,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 12,
                                   horizontal: 32,
@@ -240,7 +244,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                                 200, // Set the width to ensure both buttons are the same size
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF9F7BFF),
+                                backgroundColor: AppColors.color4,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 12,
                                   horizontal: 32,
