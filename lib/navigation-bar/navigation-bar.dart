@@ -18,7 +18,6 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   String? username;
   String? email;
-  String? password;
 
   @override
   void initState() {
@@ -38,16 +37,19 @@ class _NavigationExampleState extends State<NavigationExample> {
       setState(() {
         username = userDoc['name'];
         email = userDoc['email'];
-        password = userDoc['password'];
       });
     }
+  }
+
+  Future<void> refreshUserData() async {
+    await fetchUserData();
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white, // Set the entire background to white
+      backgroundColor: Colors.white,
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: AppColors.color1,
@@ -70,11 +72,9 @@ class _NavigationExampleState extends State<NavigationExample> {
               label: 'Home',
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.notifications,
-                  color: Colors.black), // Change icon to notifications
-              icon: Icon(Icons.notifications_outlined,
-                  color: Colors.black54), // Change icon to notifications
-              label: 'Notifications', // Change label to Notifications
+              selectedIcon: Icon(Icons.notifications, color: Colors.black),
+              icon: Icon(Icons.notifications_outlined, color: Colors.black54),
+              label: 'Notifications',
             ),
             NavigationDestination(
               selectedIcon: Icon(Icons.person, color: Colors.black),
@@ -86,68 +86,14 @@ class _NavigationExampleState extends State<NavigationExample> {
       ),
       body: <Widget>[
         EisenhowerMatrixPage(),
-        // Notifications Section
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                ),
-                color: Colors.white, // White background for the card
-                elevation: 3, // Minimal elevation for a sleek look
-                child: ListTile(
-                  leading:
-                      Icon(Icons.notifications_sharp, color: AppColors.color2),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                ),
-                color: Colors.white, // White background for the card
-                elevation: 3, // Minimal elevation for a sleek look
-                child: ListTile(
-                  leading:
-                      Icon(Icons.notifications_sharp, color: AppColors.color2),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
+        const Center(child: Text("Notifications Page")),
         username != null
             ? SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/logo.png',
-                          height: 30,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          'EMMA',
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26.0,
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 16.0),
-                    // Profile Text
                     Center(
                       child: Text(
                         'Profile',
@@ -159,17 +105,41 @@ class _NavigationExampleState extends State<NavigationExample> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                    // Profile Icon
                     Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor:
-                            const Color.fromARGB(255, 101, 101, 101),
-                        child: const Icon(
-                          Icons.person,
-                          size: 60,
-                          color: Colors.white,
-                        ),
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundColor: const Color.fromARGB(255, 101, 101, 101),
+                            child: const Icon(
+                              Icons.person,
+                              size: 60,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          GestureDetector(
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UpdateProfilePage(),
+                                ),
+                              );
+                              // Refresh user data after returning from update profile page
+                              await refreshUserData();
+                            },
+                            child: Text(
+                              "Update Profile",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.color2,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16.0),
@@ -178,8 +148,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                       color: Colors.white,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        leading:
-                            const Icon(Icons.person, color: AppColors.color2),
+                        leading: const Icon(Icons.person, color: AppColors.color2),
                         title: const Text('Username'),
                         subtitle: Text(username!),
                       ),
@@ -188,87 +157,37 @@ class _NavigationExampleState extends State<NavigationExample> {
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       color: Colors.white,
                       child: ListTile(
-                        leading:
-                            const Icon(Icons.email, color: AppColors.color2),
+                        leading: const Icon(Icons.email, color: AppColors.color2),
                         title: const Text('Email'),
                         subtitle: Text(email!),
                       ),
                     ),
-                    Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      color: Colors.white,
-                      child: ListTile(
-                        leading:
-                            const Icon(Icons.lock, color: AppColors.color2),
-                        title: const Text('Password'),
-                        subtitle: Text('*************'),
-                      ),
-                    ),
                     const SizedBox(height: 20),
                     Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width:
-                                200, // Set the width to ensure both buttons are the same size
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.color2,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                  horizontal: 32,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          UpdateProfilePage()),
-                                );
-                              },
-                              child: const Text(
-                                "Update Profile",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
+                      child: SizedBox(
+                        width: 200,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.color4,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 32,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
                             ),
                           ),
-                          const SizedBox(
-                              height: 20), // Add some spacing between buttons
-                          SizedBox(
-                            width:
-                                200, // Set the width to ensure both buttons are the same size
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.color4,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                  horizontal: 32,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          LoginScreen()), // Replace with your login page
-                                );
-                              },
-                              child: const Text(
-                                "Log Out",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                            ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                            );
+                          },
+                          child: const Text(
+                            "Log Out",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
