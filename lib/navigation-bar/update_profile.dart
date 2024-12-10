@@ -1,3 +1,4 @@
+import 'package:emma/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,17 +72,17 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Update Profile"),
-        backgroundColor: const Color.fromARGB(255, 225, 207, 255),
+        title: const Text(
+          "Update Profile",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: AppColors.color2,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -92,16 +93,16 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple,
+                      color: AppColors.color2,
                     ),
                   ),
-                  const Divider(thickness: 2, color: Colors.deepPurple),
+                  const Divider(thickness: 2, color: AppColors.color2),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _usernameController,
                     decoration: InputDecoration(
                       labelText: 'Username',
-                      prefixIcon: Icon(Icons.person, color: Color(0xFF755DC1)),
+                      prefixIcon: Icon(Icons.person, color: AppColors.color2),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -112,7 +113,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      prefixIcon: Icon(Icons.email, color: Color(0xFF755DC1)),
+                      prefixIcon: Icon(Icons.email, color: AppColors.color2),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -124,7 +125,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock, color: Color(0xFF755DC1)),
+                      prefixIcon: Icon(Icons.lock, color: AppColors.color2),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -145,7 +146,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     child: ElevatedButton(
                       onPressed: updateProfile,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF9F7BFF),
+                        backgroundColor: AppColors.color2,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

@@ -1,3 +1,4 @@
+import 'package:emma/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:emma/navigation-bar/navigation-bar.dart';
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (userCredential.user != null) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavigationExample()),
         );
@@ -71,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Text(
                   'Log In',
                   style: TextStyle(
-                    color: Color(0xFF755DC1),
+                    color: AppColors.color2,
                     fontSize: 32,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   children: [
                     const Icon(Icons.error_outline,
-                        size: 16, color: Colors.red),
+                        size: 16, color: AppColors.color2),
                     const SizedBox(width: 5),
                     Expanded(
                       child: Text(
@@ -120,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   onPressed: login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF9F7BFF),
+                    backgroundColor: AppColors.color2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -143,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text(
                     'Don’t have an account?',
                     style: TextStyle(
-                      color: Color(0xFF837E93),
+                      color: AppColors.color2,
                       fontSize: 13,
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w500,
@@ -162,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text(
                       'Sign Up',
                       style: TextStyle(
-                        color: Color(0xFF755DC1),
+                        color: AppColors.color2,
                         fontSize: 13,
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,
@@ -195,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
         fontWeight: FontWeight.w400,
       ),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Color(0xFF755DC1)),
+        prefixIcon: Icon(icon, color: AppColors.color2),
         filled: true,
         fillColor: Colors.white,
         labelText: label,
@@ -206,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
           fontFamily: 'Poppins',
         ),
         labelStyle: const TextStyle(
-          color: Color(0xFF755DC1),
+          color: AppColors.color2,
           fontSize: 15,
           fontFamily: 'Poppins',
           fontWeight: FontWeight.w600,
