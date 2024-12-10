@@ -148,120 +148,152 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _taskNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Task Name',
+          child: SingleChildScrollView(
+            // Allow scrolling for small screens
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _taskNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Task Name',
+                    // Only bottom border with minimal styling
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              DropdownButtonFormField<String>(
-                value: widget.task.category_id,
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select a category';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Select Category',
+                const SizedBox(height: 16.0),
+                DropdownButtonFormField<String>(
+                  value: widget.task.category_id,
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a category';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Select Category',
+                    // Only bottom border with minimal styling
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  items: categories
+                      .map<DropdownMenuItem<String>>((Category category) {
+                    return DropdownMenuItem<String>(
+                      value: category.uid, // Set `uid` as the value
+                      child: Text(category.name), // Show `name` in the UI
+                    );
+                  }).toList(),
+                  onChanged: (String? selectedUid) {
+                    if (selectedUid != null) {
+                      _taskCategoryController.text =
+                          selectedUid; // Update category
+                    }
+                  },
                 ),
-                items: categories
-                    .map<DropdownMenuItem<String>>((Category category) {
-                  return DropdownMenuItem<String>(
-                    value: category.uid, // Set `uid` as the value
-                    child: Text(category.name), // Show `name` in the UI
-                  );
-                }).toList(),
-                onChanged: (String? selectedUid) {
-                  if (selectedUid != null) {
-                    _taskCategoryController.text =
-                        selectedUid; // Update category
-                  }
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _taskDescController,
-                maxLines: 5, // Change to text area
-                decoration: const InputDecoration(
-                  labelText: 'Task Description',
-                  alignLabelWithHint: true,
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _taskDescController,
+                  maxLines: 5, // Change to text area
+                  decoration: const InputDecoration(
+                    labelText: 'Task Description',
+                    alignLabelWithHint: true,
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                    ),
+                    // Only bottom border with minimal styling
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _taskDeadlineController,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Deadline',
+                    // Only bottom border with minimal styling
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: widget.task.deadline ?? DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2030),
+                      helpText: 'Select Deadline',
+                      errorFormatText: 'Enter valid date',
+                      errorInvalidText: 'Enter date in valid range',
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        _taskDeadline = picked;
+                        _taskDeadlineController.text =
+                            DateFormat('dd/MM/yyyy').format(_taskDeadline!);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _taskReminderController,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Reminder',
+                    // Only bottom border with minimal styling
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: widget.task.reminder ?? DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2030),
+                      helpText: 'Select Reminder',
+                      errorFormatText: 'Enter valid date',
+                      errorInvalidText: 'Enter date in valid range',
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        _taskReminder = picked;
+                        _taskReminderController.text =
+                            DateFormat('dd/MM/yyyy').format(_taskReminder!);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity, // Full width button
+                  child: ElevatedButton(
+                    onPressed: _saveTask,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF9F7BFF), // Warna ungu
+                      foregroundColor: Colors.white, // Warna teks putih
+                    ),
+                    child: const Text('Save'),
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _taskDeadlineController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Deadline',
-                ),
-                onTap: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: widget.task.deadline ?? DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2030),
-                    helpText: 'Select Deadline',
-                    errorFormatText: 'Enter valid date',
-                    errorInvalidText: 'Enter date in valid range',
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      _taskDeadline = picked;
-                      _taskDeadlineController.text =
-                          DateFormat('dd/MM/yyyy').format(_taskDeadline!);
-                    });
-                  }
-                },
-              ),
-              TextFormField(
-                controller: _taskReminderController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Reminder',
-                ),
-                onTap: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: widget.task.reminder ?? DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2030),
-                    helpText: 'Select Reminder',
-                    errorFormatText: 'Enter valid date',
-                    errorInvalidText: 'Enter date in valid range',
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      _taskReminder = picked;
-                      _taskReminderController.text =
-                          DateFormat('dd/MM/yyyy').format(_taskReminder!);
-                    });
-                  }
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveTask,
-                child: const Text('Save'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

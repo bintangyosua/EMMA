@@ -43,104 +43,57 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
       List<Task> tasks, String title, String subtitle, Color color) {
     return Container(
       decoration: BoxDecoration(
-        color: color,
+        color: color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Expanded(
-            child: tasks.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.black,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          subtitle,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                            color: Color.fromARGB(137, 0, 0, 0),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+      child: Center(
+        child: tasks.isEmpty
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
-                  )
-                : Column(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                title,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.black,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                subtitle,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontStyle: FontStyle.italic,
-                                  color: Color.fromARGB(137, 0, 0, 0),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              )
+            : ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TaskDetailPage(
+                            task: tasks[index],
+                            onTaskChanged: () => _loadTasks(),
                           ),
                         ),
-                      ),
-                      // Tasks list section
-                      Expanded(
-                        flex: 2,
-                        child: ListView.builder(
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) {
-                            final task = tasks[index];
-                            return ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TaskDetailPage(
-                                      task: tasks[index],
-                                      onTaskChanged: () => _loadTasks(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              title: Text(
-                                task.name.length > 30
-                                    ? '${task.name.substring(0, 20)}...'
-                                    : task.name,
-                                style: const TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                              dense: true,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-        ],
+                      );
+                    },
+                    title: Text(
+                      tasks[index].name,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                },
+              ),
       ),
     );
   }
@@ -149,7 +102,8 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF3E5F5),
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Row(
           children: [
             Image.asset(
@@ -163,6 +117,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w900,
+                color: Colors.black,
               ),
             ),
           ],
@@ -173,11 +128,6 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              // return TaskModal(
-              //   onTaskAdded: () {
-              //     _loadTasks();
-              //   },
-              // );
               return TaskCreatePage(onTaskChanged: () => _loadTasks());
             },
           );
@@ -185,7 +135,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
         child: const Icon(Icons.add),
       ),
       body: Container(
-        color: const Color(0xFFF3E5F5),
+        color: Colors.white,
         child: Row(
           children: [
             Expanded(
@@ -195,16 +145,16 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                     child: buildTaskList(
                       _urgentImportantTasks,
                       'Do Now',
-                      'Do it Now.',
-                      const Color.fromARGB(255, 69, 225, 74),
+                      'Tasks to be done immediately.',
+                      Colors.redAccent,
                     ),
                   ),
                   Expanded(
                     child: buildTaskList(
                       _urgentNotImportantTasks,
                       'Delegate',
-                      'Who can do it for you?',
-                      const Color.fromARGB(255, 255, 39, 24),
+                      'Assign to someone else.',
+                      Colors.orangeAccent,
                     ),
                   ),
                 ],
@@ -217,16 +167,16 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                     child: buildTaskList(
                       _notUrgentImportantTasks,
                       'Decide',
-                      'Schedule a time',
-                      const Color.fromARGB(255, 15, 214, 249),
+                      'Schedule a time to do it.',
+                      Colors.blueAccent,
                     ),
                   ),
                   Expanded(
                     child: buildTaskList(
                       _notUrgentNotImportantTasks,
-                      'Postpone',
-                      'Eliminate it',
-                      Colors.grey,
+                      'Eliminate',
+                      'Consider removing it.',
+                      Colors.greenAccent,
                     ),
                   ),
                 ],

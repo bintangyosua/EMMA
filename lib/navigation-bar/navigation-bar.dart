@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emma/navigation-bar/update_profile.dart';
-import 'package:emma/ui/login_screen.dart'; // Import your login page
+import 'package:emma/ui/login_screen.dart';
 
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
@@ -46,7 +46,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF3E5F5),
+      backgroundColor: Colors.white, // Set the entire background to white
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: const Color(0xFFD1C4E9),
@@ -69,9 +69,11 @@ class _NavigationExampleState extends State<NavigationExample> {
               label: 'Home',
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.search, color: Colors.black),
-              icon: Icon(Icons.search_outlined, color: Colors.black54),
-              label: 'Search',
+              selectedIcon: Icon(Icons.notifications,
+                  color: Colors.black), // Change icon to notifications
+              icon: Icon(Icons.notifications_outlined,
+                  color: Colors.black54), // Change icon to notifications
+              label: 'Notifications', // Change label to Notifications
             ),
             NavigationDestination(
               selectedIcon: Icon(Icons.person, color: Colors.black),
@@ -83,6 +85,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       ),
       body: <Widget>[
         EisenhowerMatrixPage(),
+        // Notifications Section
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Column(
@@ -90,9 +93,10 @@ class _NavigationExampleState extends State<NavigationExample> {
               Card(
                 margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
-                elevation: 5,
+                color: Colors.white, // White background for the card
+                elevation: 3, // Minimal elevation for a sleek look
                 child: ListTile(
                   leading:
                       Icon(Icons.notifications_sharp, color: Color(0xFF755DC1)),
@@ -103,9 +107,10 @@ class _NavigationExampleState extends State<NavigationExample> {
               Card(
                 margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
-                elevation: 5,
+                color: Colors.white, // White background for the card
+                elevation: 3, // Minimal elevation for a sleek look
                 child: ListTile(
                   leading:
                       Icon(Icons.notifications_sharp, color: Color(0xFF755DC1)),
