@@ -13,8 +13,7 @@ final _firestore = FirebaseFirestore.instance;
 class TaskCreatePage extends StatefulWidget {
   final Function onTaskChanged;
 
-  const TaskCreatePage({Key? key, required this.onTaskChanged})
-      : super(key: key);
+  const TaskCreatePage({super.key, required this.onTaskChanged});
 
   @override
   _TaskCreatePageState createState() => _TaskCreatePageState();
@@ -116,7 +115,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(

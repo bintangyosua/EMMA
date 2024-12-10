@@ -4,6 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UpdateProfilePage extends StatefulWidget {
+  final VoidCallback reloadDataCallback;
+
+  const UpdateProfilePage({Key? key, required this.reloadDataCallback});
+
   @override
   _UpdateProfilePageState createState() => _UpdateProfilePageState();
 }
@@ -58,6 +62,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           content: Text("Profile updated successfully!"),
         ));
 
+        widget.reloadDataCallback();
         // Navigate back to profile page
         Navigator.pop(context);
       }

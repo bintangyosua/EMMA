@@ -16,7 +16,6 @@ class TaskModal extends StatefulWidget {
 }
 
 class _TaskModalState extends State<TaskModal> {
-  final _formKey = GlobalKey<FormState>();
   DateTime? _taskDeadline;
   DateTime? _taskReminder;
   List<Category> categories = [];
@@ -33,9 +32,7 @@ class _TaskModalState extends State<TaskModal> {
     _loadCategory();
   }
 
-  // Method untuk memuat task dari Firebase
   void _loadCategory() async {
-    // Ambil task berdasarkan kategori tanpa `setState` terlebih dahulu
     List<Category> res = await Category.findAll();
 
     if (res.isEmpty) {
@@ -48,7 +45,6 @@ class _TaskModalState extends State<TaskModal> {
       return;
     }
 
-    // Panggil `setState` hanya untuk memperbarui state setelah data diambil
     setState(() {
       categories = res;
     });

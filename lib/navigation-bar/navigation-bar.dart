@@ -51,7 +51,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: AppColors.color1,
-          labelTextStyle: MaterialStateProperty.all(
+          labelTextStyle: WidgetStateProperty.all(
             const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ),
@@ -226,8 +226,9 @@ class _NavigationExampleState extends State<NavigationExample> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          UpdateProfilePage()),
+                                      builder: (context) => UpdateProfilePage(
+                                            reloadDataCallback: fetchUserData,
+                                          )),
                                 );
                               },
                               child: const Text(
