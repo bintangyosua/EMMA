@@ -43,7 +43,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
       List<Task> tasks, String title, String subtitle, Color color) {
     return Container(
       decoration: BoxDecoration(
-        color: color,
+        color: color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.all(8.0),
@@ -105,42 +105,15 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                             ],
                           ),
                         ),
-                      ),
-                      // Tasks list section
-                      Expanded(
-                        flex: 2,
-                        child: ListView.builder(
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) {
-                            final task = tasks[index];
-                            return ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TaskDetailPage(
-                                      task: tasks[index],
-                                      onTaskChanged: () => _loadTasks(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              title: Text(
-                                task.name.length > 30
-                                    ? '${task.name.substring(0, 20)}...'
-                                    : task.name,
-                                style: const TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                              dense: true,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-        ],
+                      );
+                    },
+                    title: Text(
+                      tasks[index].name,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                },
+              ),
       ),
     );
   }
@@ -163,6 +136,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w900,
+                color: Colors.black,
               ),
             ),
           ],

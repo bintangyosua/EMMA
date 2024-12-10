@@ -55,7 +55,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
           ),
         );
       }
-
       return;
     }
 
@@ -117,6 +116,9 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.color2,
@@ -134,11 +136,13 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.05, vertical: 20.0),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildTextFormField(
                 controller: _taskNameController,
