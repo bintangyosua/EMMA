@@ -1,4 +1,3 @@
-import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
 import 'package:emma/navigation-bar/navigation-bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -80,14 +79,11 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             User? user = snapshot.data;
-            // Jika pengguna terautentikasi, arahkan ke HomePage
             if (user != null) {
               return NavigationExample();
             }
-            // Jika tidak, arahkan ke LoginPage
             return LoginScreen();
           }
-          // Menampilkan indikator loading saat memeriksa status login
           return const Center(child: CircularProgressIndicator());
         },
       ),
