@@ -75,6 +75,7 @@ class Task {
       return [];
     }
   }
+
   Future<bool> save() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     String? currentUid =

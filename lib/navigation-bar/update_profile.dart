@@ -16,8 +16,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isPasswordChanged =
-      false;
+  bool _isPasswordChanged = false;
   bool _isPasswordVisible = false;
   String? _errorMessage;
 
@@ -75,34 +74,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             .update(updatedData);
 
         // Cek jika email diubah dan pastikan pengguna sudah memverifikasi emailnya
-        if (_emailController.text != currentUser.email) {
-          if (currentUser.emailVerified) {
-            await currentUser.updateEmail(_emailController.text);
-          } else {
-            // Jika email belum terverifikasi, kirimkan email verifikasi
-            await currentUser.sendEmailVerification();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Please verify your email before updating it."),
-            ));
-            return;
-          }
-        }
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Profile updated successfully!"),
         ));
 
-<<<<<<< HEAD
-=======
         widget.reloadDataCallback();
         // Navigate back to profile page
->>>>>>> cac8f57c3f06e4edd5e9b096425d59359224027e
         Navigator.pop(context);
       }
     } catch (e) {
       setState(() {
-        _errorMessage =
-            e.toString();
+        _errorMessage = e.toString();
       });
     }
   }
@@ -126,8 +109,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment
-                .center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _buildTextField(
                 controller: _usernameController,

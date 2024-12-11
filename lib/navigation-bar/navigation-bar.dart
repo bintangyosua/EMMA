@@ -110,7 +110,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundColor: const Color.fromARGB(255, 101, 101, 101),
+                            backgroundColor:
+                                const Color.fromARGB(255, 101, 101, 101),
                             child: const Icon(
                               Icons.person,
                               size: 60,
@@ -123,7 +124,9 @@ class _NavigationExampleState extends State<NavigationExample> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => UpdateProfilePage(),
+                                  builder: (context) => UpdateProfilePage(
+                                    reloadDataCallback: refreshUserData,
+                                  ),
                                 ),
                               );
                               // Refresh user data after returning from update profile page
@@ -148,7 +151,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                       color: Colors.white,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        leading: const Icon(Icons.person, color: AppColors.color2),
+                        leading:
+                            const Icon(Icons.person, color: AppColors.color2),
                         title: const Text('Username'),
                         subtitle: Text(username!),
                       ),
@@ -157,14 +161,14 @@ class _NavigationExampleState extends State<NavigationExample> {
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       color: Colors.white,
                       child: ListTile(
-                        leading: const Icon(Icons.email, color: AppColors.color2),
+                        leading:
+                            const Icon(Icons.email, color: AppColors.color2),
                         title: const Text('Email'),
                         subtitle: Text(email!),
                       ),
                     ),
                     const SizedBox(height: 20),
                     Center(
-<<<<<<< HEAD
                       child: SizedBox(
                         width: 200,
                         child: ElevatedButton(
@@ -176,44 +180,13 @@ class _NavigationExampleState extends State<NavigationExample> {
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
-=======
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width:
-                                200, // Set the width to ensure both buttons are the same size
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.color2,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                  horizontal: 32,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UpdateProfilePage(
-                                            reloadDataCallback: fetchUserData,
-                                          )),
-                                );
-                              },
-                              child: const Text(
-                                "Update Profile",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
->>>>>>> cac8f57c3f06e4edd5e9b096425d59359224027e
                             ),
                           ),
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
                             );
                           },
                           child: const Text(
