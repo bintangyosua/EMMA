@@ -13,7 +13,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordChanged =
-      false; // Flag untuk memeriksa apakah password berubah
+      false;
   bool _isPasswordVisible = false;
   String? _errorMessage;
 
@@ -34,16 +34,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
       _usernameController.text = userDoc['name'];
       _emailController.text = userDoc['email'];
-      _passwordController.text = decryptPassword(userDoc['password']);
+      _passwordController.text = userDoc['password'];
     }
-  }
-
-  String decryptPassword(String encryptedPassword) {
-    return encryptedPassword; // Placeholder
-  }
-
-  String encryptPassword(String plainPassword) {
-    return plainPassword; // Placeholder
   }
 
   Future<void> updateProfile() async {
@@ -55,23 +47,44 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           'email': _emailController.text,
         };
 
+        // Cek jika password diubah
         if (_isPasswordChanged) {
           String encryptedPassword = encryptPassword(_passwordController.text);
           updatedData['password'] = encryptedPassword;
+
+          // Perbarui password di FirebaseAuth
           await currentUser.updatePassword(_passwordController.text);
         }
 
+        // Perbarui data di Firestore
         await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser.uid)
             .update(updatedData);
 
-        await currentUser.updateEmail(_emailController.text);
+        // Cek jika email diubah dan pastikan pengguna sudah memverifikasi emailnya
+        if (_emailController.text != currentUser.email) {
+          if (currentUser.emailVerified) {
+            await currentUser.updateEmail(_emailController.text);
+          } else {
+            // Jika email belum terverifikasi, kirimkan email verifikasi
+            await currentUser.sendEmailVerification();
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Please verify your email before updating it."),
+            ));
+            return;
+          }
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Profile updated successfully!"),
         ));
 
+<<<<<<< HEAD
+=======
+        widget.reloadDataCallback();
+        // Navigate back to profile page
+>>>>>>> cac8f57c3f06e4edd5e9b096425d59359224027e
         Navigator.pop(context);
       }
     } catch (e) {
@@ -85,23 +98,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: const Text(
-            "Update Profile",
-            style: TextStyle(color: Colors.black),
-          ),
+        title: const Text(
+          "Update Profile",
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.white,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: AppColors.color2,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment
-                .center, // Menyesuaikan posisi elemen di tengah
+                .center,
             children: [
               _buildTextField(
                 controller: _usernameController,
