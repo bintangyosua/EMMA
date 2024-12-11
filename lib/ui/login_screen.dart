@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (userCredential.user != null) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => NavigationExample()),
         );
