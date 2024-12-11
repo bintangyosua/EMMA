@@ -112,8 +112,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundColor:
-                                const Color.fromARGB(255, 101, 101, 101),
+                            backgroundColor: const Color.fromARGB(255, 101, 101, 101),
                             child: const Icon(
                               Icons.person,
                               size: 60,
@@ -153,8 +152,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                       color: Colors.white,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        leading:
-                            const Icon(Icons.person, color: AppColors.color2),
+                        leading: const Icon(Icons.person, color: AppColors.color2),
                         title: const Text('Username'),
                         subtitle: Text(username!),
                       ),
@@ -163,8 +161,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       color: Colors.white,
                       child: ListTile(
-                        leading:
-                            const Icon(Icons.email, color: AppColors.color2),
+                        leading: const Icon(Icons.email, color: AppColors.color2),
                         title: const Text('Email'),
                         subtitle: Text(email!),
                       ),
@@ -196,8 +193,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
+                              MaterialPageRoute(builder: (context) => LoginScreen()),
                             );
                           },
                           child: const Text(
