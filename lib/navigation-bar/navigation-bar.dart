@@ -18,6 +18,7 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   String? username;
   String? email;
+  String? password;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       setState(() {
         username = userDoc['name'];
         email = userDoc['email'];
+        password = userDoc['password']; // Ambil password dari Firestore
       });
     }
   }
@@ -53,7 +55,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: AppColors.color1,
-          labelTextStyle: WidgetStateProperty.all(
+          labelTextStyle: MaterialStateProperty.all(
             const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         ),
@@ -162,9 +164,17 @@ class _NavigationExampleState extends State<NavigationExample> {
                         subtitle: Text(email!),
                       ),
                     ),
+                    Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      color: Colors.white,
+                      child: ListTile(
+                        leading: const Icon(Icons.lock, color: AppColors.color2),
+                        title: const Text('Password'),
+                        subtitle: Text('*' * (password?.length ?? 0)), // Tampilkan bintang
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Center(
-<<<<<<< HEAD
                       child: SizedBox(
                         width: 200,
                         child: ElevatedButton(
@@ -176,38 +186,6 @@ class _NavigationExampleState extends State<NavigationExample> {
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
-=======
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width:
-                                200, // Set the width to ensure both buttons are the same size
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.color2,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                  horizontal: 32,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UpdateProfilePage(
-                                            reloadDataCallback: fetchUserData,
-                                          )),
-                                );
-                              },
-                              child: const Text(
-                                "Update Profile",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
->>>>>>> cac8f57c3f06e4edd5e9b096425d59359224027e
                             ),
                           ),
                           onPressed: () {

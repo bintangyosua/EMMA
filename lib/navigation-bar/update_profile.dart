@@ -4,10 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UpdateProfilePage extends StatefulWidget {
-  final VoidCallback reloadDataCallback;
-
-  const UpdateProfilePage({Key? key, required this.reloadDataCallback});
-
   @override
   _UpdateProfilePageState createState() => _UpdateProfilePageState();
 }
@@ -17,7 +13,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordChanged =
-      false;
+      false; // Flag untuk memeriksa apakah password berubah
   bool _isPasswordVisible = false;
   String? _errorMessage;
 
@@ -59,50 +55,28 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           'email': _emailController.text,
         };
 
-        // Cek jika password diubah
         if (_isPasswordChanged) {
           String encryptedPassword = encryptPassword(_passwordController.text);
           updatedData['password'] = encryptedPassword;
-
-          // Perbarui password di FirebaseAuth
           await currentUser.updatePassword(_passwordController.text);
         }
 
-        // Perbarui data di Firestore
         await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser.uid)
             .update(updatedData);
 
-        // Cek jika email diubah dan pastikan pengguna sudah memverifikasi emailnya
-        if (_emailController.text != currentUser.email) {
-          if (currentUser.emailVerified) {
-            await currentUser.updateEmail(_emailController.text);
-          } else {
-            // Jika email belum terverifikasi, kirimkan email verifikasi
-            await currentUser.sendEmailVerification();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Please verify your email before updating it."),
-            ));
-            return;
-          }
-        }
+        await currentUser.updateEmail(_emailController.text);
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Profile updated successfully!"),
         ));
 
-<<<<<<< HEAD
-=======
-        widget.reloadDataCallback();
-        // Navigate back to profile page
->>>>>>> cac8f57c3f06e4edd5e9b096425d59359224027e
         Navigator.pop(context);
       }
     } catch (e) {
       setState(() {
-        _errorMessage =
-            e.toString();
+        _errorMessage = "Update failed. Please try again.";
       });
     }
   }
@@ -127,7 +101,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment
-                .center,
+                .center, // Menyesuaikan posisi elemen di tengah
             children: [
               _buildTextField(
                 controller: _usernameController,
