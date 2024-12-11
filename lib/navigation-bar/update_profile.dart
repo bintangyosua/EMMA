@@ -16,9 +16,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isPasswordChanged =
-      false;
-  bool _isPasswordVisible = false;
   String? _errorMessage;
 
   @override
@@ -38,71 +35,40 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
       _usernameController.text = userDoc['name'];
       _emailController.text = userDoc['email'];
-      _passwordController.text = decryptPassword(userDoc['password']);
+      _passwordController.text = userDoc['password'];
     }
-  }
-
-  String decryptPassword(String encryptedPassword) {
-    return encryptedPassword; // Placeholder
-  }
-
-  String encryptPassword(String plainPassword) {
-    return plainPassword; // Placeholder
   }
 
   Future<void> updateProfile() async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        Map<String, dynamic> updatedData = {
-          'name': _usernameController.text,
-          'email': _emailController.text,
-        };
-
-        // Cek jika password diubah
-        if (_isPasswordChanged) {
-          String encryptedPassword = encryptPassword(_passwordController.text);
-          updatedData['password'] = encryptedPassword;
-
-          // Perbarui password di FirebaseAuth
-          await currentUser.updatePassword(_passwordController.text);
-        }
-
-        // Perbarui data di Firestore
+        // Update Firestore document
         await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser.uid)
-            .update(updatedData);
+            .update({
+          'name': _usernameController.text,
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        });
 
-        // Cek jika email diubah dan pastikan pengguna sudah memverifikasi emailnya
-        if (_emailController.text != currentUser.email) {
-          if (currentUser.emailVerified) {
-            await currentUser.updateEmail(_emailController.text);
-          } else {
-            // Jika email belum terverifikasi, kirimkan email verifikasi
-            await currentUser.sendEmailVerification();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Please verify your email before updating it."),
-            ));
-            return;
-          }
-        }
+        // Optionally, update the Firebase Auth email or password
+        await currentUser.updateEmail(_emailController.text);
+        await currentUser.updatePassword(_passwordController.text);
 
+        // Show a success message
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Profile updated successfully!"),
         ));
 
-<<<<<<< HEAD
-=======
         widget.reloadDataCallback();
         // Navigate back to profile page
->>>>>>> cac8f57c3f06e4edd5e9b096425d59359224027e
         Navigator.pop(context);
       }
     } catch (e) {
       setState(() {
-        _errorMessage =
-            e.toString();
+        _errorMessage = "Update failed. Please try again.";
       });
     }
   }
@@ -111,129 +77,100 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: const Text(
-            "Update Profile",
-            style: TextStyle(color: Colors.black),
-          ),
+        title: const Text(
+          "Update Profile",
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.white,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: AppColors.color2,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment
-                .center,
-            children: [
-              _buildTextField(
-                controller: _usernameController,
-                label: "Username",
-                icon: Icons.person,
-              ),
-              const SizedBox(height: 16),
-              _buildTextField(
-                controller: _emailController,
-                label: "Email",
-                icon: Icons.email,
-                inputType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              _buildPasswordField(),
-              if (_errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
-              const SizedBox(height: 24),
-              Center(
-                child: ElevatedButton(
-                  onPressed: updateProfile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.color2,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Edit Profile",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.color2,
                     ),
                   ),
-                  child: const Text(
-                    "Update",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  const Divider(thickness: 2, color: AppColors.color2),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      prefixIcon: Icon(Icons.person, color: AppColors.color2),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email, color: AppColors.color2),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock, color: AppColors.color2),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        _errorMessage!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: updateProfile,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.color2,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "Update Profile",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    TextInputType inputType = TextInputType.text,
-  }) {
-    return TextField(
-      controller: controller,
-      keyboardType: inputType,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: AppColors.color2),
-        filled: true,
-        fillColor: Colors.grey[200],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.color2, width: 2),
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return TextField(
-      controller: _passwordController,
-      obscureText: !_isPasswordVisible,
-      onChanged: (value) {
-        if (value != decryptPassword(_passwordController.text)) {
-          _isPasswordChanged = true;
-        }
-      },
-      decoration: InputDecoration(
-        labelText: "Password",
-        prefixIcon: const Icon(Icons.lock, color: AppColors.color2),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: AppColors.color2,
-          ),
-          onPressed: () {
-            setState(() {
-              _isPasswordVisible = !_isPasswordVisible;
-            });
-          },
-        ),
-        filled: true,
-        fillColor: Colors.grey[200],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.color2, width: 2),
-          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
