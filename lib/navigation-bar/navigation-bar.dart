@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emma/navigation-bar/update_profile.dart';
 import 'package:emma/ui/login_screen.dart';
+import 'package:emma/navigation-bar/statistic_page.dart';
 
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
@@ -74,9 +75,11 @@ class _NavigationExampleState extends State<NavigationExample> {
               label: 'Home',
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.notifications, color: Colors.black),
-              icon: Icon(Icons.notifications_outlined, color: Colors.black54),
-              label: 'Notifications',
+              selectedIcon:
+                  Icon(Icons.bar_chart, color: Colors.black), // Updated icon
+              icon: Icon(Icons.bar_chart_outlined,
+                  color: Colors.black54), // Updated icon
+              label: 'Statistics', // Updated label
             ),
             NavigationDestination(
               selectedIcon: Icon(Icons.person, color: Colors.black),
@@ -88,7 +91,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       ),
       body: <Widget>[
         EisenhowerMatrixPage(),
-        const Center(child: Text("Notifications Page")),
+        StatisticPage(),
         username != null
             ? SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
@@ -112,7 +115,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundColor: const Color.fromARGB(255, 101, 101, 101),
+                            backgroundColor:
+                                const Color.fromARGB(255, 101, 101, 101),
                             child: const Icon(
                               Icons.person,
                               size: 60,
@@ -152,7 +156,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                       color: Colors.white,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        leading: const Icon(Icons.person, color: AppColors.color2),
+                        leading:
+                            const Icon(Icons.person, color: AppColors.color2),
                         title: const Text('Username'),
                         subtitle: Text(username!),
                       ),
@@ -161,7 +166,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       color: Colors.white,
                       child: ListTile(
-                        leading: const Icon(Icons.email, color: AppColors.color2),
+                        leading:
+                            const Icon(Icons.email, color: AppColors.color2),
                         title: const Text('Email'),
                         subtitle: Text(email!),
                       ),
@@ -170,9 +176,11 @@ class _NavigationExampleState extends State<NavigationExample> {
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       color: Colors.white,
                       child: ListTile(
-                        leading: const Icon(Icons.lock, color: AppColors.color2),
+                        leading:
+                            const Icon(Icons.lock, color: AppColors.color2),
                         title: const Text('Password'),
-                        subtitle: Text('*' * (password?.length ?? 0)), // Tampilkan bintang
+                        subtitle: Text(
+                            '*' * (password?.length ?? 0)), // Tampilkan bintang
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -193,7 +201,8 @@ class _NavigationExampleState extends State<NavigationExample> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
                             );
                           },
                           child: const Text(
