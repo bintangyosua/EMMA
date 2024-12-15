@@ -114,7 +114,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                             itemBuilder: (context, index) {
                               final task = tasks[index];
                               return ListTile(
-                                onTap: () {
+                                onLongPress: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -125,9 +125,14 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                                     ),
                                   );
                                 },
+                                onTap: () {
+                                  setState(() {
+                                    task.checkDone(task.uid!);
+                                  });
+                                },
                                 title: Text(
-                                  task.name.length > 30
-                                      ? '${task.name.substring(0, 20)}...'
+                                  task.name.length > 15
+                                      ? '${task.name.substring(0, 15)}...'
                                       : task.name,
                                   style: TextStyle(
                                     fontSize: 16,
@@ -138,17 +143,8 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                                   ),
                                 ),
                                 dense: true,
-                                trailing: Checkbox(
-                                  activeColor: Colors.green,
-                                  checkColor: Colors.black,
-                                  value: task.is_done,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      task.checkDone(task.uid!);
-                                      // _loadTasks();
-                                    });
-                                  },
-                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 0.0),
                               );
                             }),
                       ),
