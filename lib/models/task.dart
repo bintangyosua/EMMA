@@ -10,6 +10,7 @@ class Task {
   final DateTime? reminder;
   final String? user_id;
   final String category_id;
+  bool is_done;
   bool isCrossedOut;
 
   Task(
@@ -20,6 +21,7 @@ class Task {
       required this.reminder,
       required this.user_id,
       required this.category_id,
+      required this.is_done,
       this.isCrossedOut = false});
 
   Map<String, dynamic> toMap() {
@@ -30,6 +32,7 @@ class Task {
       'reminder': reminder,
       'user_id': user_id,
       'category_id': category_id,
+      'is_done': is_done
     };
   }
 
@@ -128,6 +131,7 @@ class Task {
         category_id: map['category_id'] is DocumentReference
             ? (map['category_id'] as DocumentReference).id
             : map['category_id'],
+        is_done: map['is_done'],
         uid: uid);
   }
 
@@ -144,6 +148,23 @@ class Task {
     } catch (e) {
       print("Error parsing date: $e");
       return null; // Atau bisa return DateTime.now() atau nilai default lainnya
+    }
+  }
+
+  bool checkDone(String uid) {
+    try {
+      bool newIsDone = !is_done;
+      FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(uid)
+          .update({'is_done': newIsDone});
+      this.is_done = newIsDone;
+
+      print('value is_done: $newIsDone');
+
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

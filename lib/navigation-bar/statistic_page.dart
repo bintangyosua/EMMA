@@ -45,10 +45,10 @@ class _StatisticPageState extends State<StatisticPage> {
       });
 
       // Debugging prints
-      print('Urgent Important Tasks: $urgentImportantCount');
-      print('Not Urgent Important Tasks: $notUrgentImportantCount');
-      print('Urgent Not Important Tasks: $urgentNotImportantCount');
-      print('Not Urgent Not Important Tasks: $notUrgentNotImportantCount');
+      // print('Urgent Important Tasks: $urgentImportantCount');
+      // print('Not Urgent Important Tasks: $notUrgentImportantCount');
+      // print('Urgent Not Important Tasks: $urgentNotImportantCount');
+      // print('Not Urgent Not Important Tasks: $notUrgentNotImportantCount');
     } catch (e) {
       print('Error fetching task counts: $e');
       setState(() {

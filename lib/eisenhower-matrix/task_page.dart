@@ -80,21 +80,44 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   void _deleteTask() {
-    widget.task.delete().then((value) {
-      if (mounted) {
-        widget.onTaskChanged();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Task deleted")),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                widget.task.delete().then((value) {
+                  if (mounted) {
+                    widget.onTaskChanged();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Task deleted")),
+                    );
+                    Navigator.pop(context); // Kembali setelah penghapusan
+                    Navigator.of(context).pop(); // Close the dialog
+                  }
+                }).catchError((error) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(error.toString())),
+                    );
+                  }
+                });
+              },
+            ),
+          ],
         );
-        Navigator.pop(context); // Kembali setelah penghapusan
-      }
-    }).catchError((error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.toString())),
-        );
-      }
-    });
+      },
+    );
   }
 
   void _saveTask() {

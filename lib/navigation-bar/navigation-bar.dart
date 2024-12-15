@@ -1,5 +1,6 @@
 import 'package:emma/colors.dart';
 import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
+import 'package:emma/finished-tasks/finished_task.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,6 +49,36 @@ class _NavigationExampleState extends State<NavigationExample> {
     await fetchUserData();
   }
 
+  Future<void> deleteTask(String taskId) async {
+    final confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete ?? false) {
+      await FirebaseFirestore.instance.collection('tasks').doc(taskId).delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Task deleted successfully')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -82,6 +113,12 @@ class _NavigationExampleState extends State<NavigationExample> {
               label: 'Statistics', // Updated label
             ),
             NavigationDestination(
+              selectedIcon:
+                  Icon(Icons.bar_chart, color: Colors.black), // Updated icon
+              icon: Icon(Icons.task, color: Colors.black54), // Updated icon
+              label: 'Tasks', // Updated label
+            ),
+            NavigationDestination(
               selectedIcon: Icon(Icons.person, color: Colors.black),
               icon: Icon(Icons.person_outlined, color: Colors.black54),
               label: 'Profile',
@@ -92,6 +129,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       body: <Widget>[
         EisenhowerMatrixPage(),
         StatisticPage(),
+        TaskListPage(),
         username != null
             ? SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),

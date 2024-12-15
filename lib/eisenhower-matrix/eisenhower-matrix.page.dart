@@ -110,32 +110,43 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
                       Expanded(
                         flex: 2,
                         child: ListView.builder(
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) {
-                            final task = tasks[index];
-                            return ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TaskDetailPage(
-                                      task: tasks[index],
-                                      onTaskChanged: () => _loadTasks(),
+                            itemCount: tasks.length,
+                            itemBuilder: (context, index) {
+                              final task = tasks[index];
+                              return ListTile(
+                                onLongPress: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TaskDetailPage(
+                                        task: tasks[index],
+                                        onTaskChanged: () => _loadTasks(),
+                                      ),
                                     ),
+                                  );
+                                },
+                                onTap: () {
+                                  setState(() {
+                                    task.checkDone(task.uid!);
+                                  });
+                                },
+                                title: Text(
+                                  task.name.length > 15
+                                      ? '${task.name.substring(0, 15)}...'
+                                      : task.name,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    decoration: task.is_done
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
                                   ),
-                                );
-                              },
-                              title: Text(
-                                task.name.length > 30
-                                    ? '${task.name.substring(0, 20)}...'
-                                    : task.name,
-                                style: const TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                              dense: true,
-                            );
-                          },
-                        ),
+                                ),
+                                dense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 0.0),
+                              );
+                            }),
                       ),
                     ],
                   ),
