@@ -1,5 +1,4 @@
 import 'package:emma/colors.dart';
-import 'package:emma/eisenhower-matrix/eisenhower-matrix.page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:emma/navigation-bar/navigation-bar.dart';
