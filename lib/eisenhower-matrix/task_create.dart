@@ -76,13 +76,13 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
     if (_formKey.currentState!.validate()) {
       User currentUser = FirebaseAuth.instance.currentUser!;
       final newTask = Task(
-        name: _taskNameController.text,
-        desc: _taskDescController.text,
-        category_id: _taskCategoryController.text,
-        deadline: _taskDeadline,
-        reminder: _taskReminder,
-        user_id: currentUser.uid,
-      );
+          name: _taskNameController.text,
+          desc: _taskDescController.text,
+          category_id: _taskCategoryController.text,
+          deadline: _taskDeadline,
+          reminder: _taskReminder,
+          user_id: currentUser.uid,
+          is_done: false);
 
       if (_taskNameController.text.isEmpty ||
           _taskDescController.text.isEmpty ||

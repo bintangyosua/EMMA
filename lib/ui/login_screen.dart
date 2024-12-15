@@ -5,6 +5,8 @@ import 'package:emma/navigation-bar/navigation-bar.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
