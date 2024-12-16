@@ -11,6 +11,15 @@ class _TaskListPageState extends State<TaskListPage> {
   List<Task> _tasks = [];
   String _selectedCategory = 'All';
 
+  // Define category IDs as constants to match StatisticPage
+  static const Map<String, String> _categoryIds = {
+    'All': 'All',
+    'Do Now': 'uw0sLWpsSWYFPfeTbijO',
+    'Decide': 'Pnkb6VLOhryAjrwCOyes',
+    'Delegate': 'cl0BxRTOXKkS2DmO0DC8',
+    'Postpone': 'qUPKuIqJioKvZO8qYD3L',
+  };
+
   @override
   void initState() {
     super.initState();
@@ -32,10 +41,12 @@ class _TaskListPageState extends State<TaskListPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Updated filtering logic
     List<Task> filteredTasks = _selectedCategory == 'All'
         ? _tasks
         : _tasks
-            .where((task) => task.category_id == _selectedCategory)
+            .where(
+                (task) => task.category_id == _categoryIds[_selectedCategory])
             .toList();
 
     return Scaffold(
@@ -64,17 +75,10 @@ class _TaskListPageState extends State<TaskListPage> {
           DropdownButton<String>(
             focusColor: AppColors.color1,
             value: _selectedCategory,
-            items: [
-              'All',
-              'Category 1',
-              'Category 2',
-              'Category 3',
-              'Category 4',
-            ].map((String category) {
+            items: _categoryIds.keys.map((String category) {
               return DropdownMenuItem<String>(
                 value: category,
                 child: Text(category),
-                // style: TextStyle(color: Colors.black),
               );
             }).toList(),
             onChanged: (String? newCategory) {
