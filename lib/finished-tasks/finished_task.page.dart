@@ -65,88 +65,116 @@ class _TaskListPageState extends State<TaskListPage> {
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w900,
+                color: Colors.black,
               ),
             ),
           ],
         ),
+        elevation: 0,
       ),
       body: Column(
         children: [
-          DropdownButton<String>(
-            focusColor: AppColors.color1,
-            value: _selectedCategory,
-            items: _categoryIds.keys.map((String category) {
-              return DropdownMenuItem<String>(
-                value: category,
-                child: Text(category),
-              );
-            }).toList(),
-            onChanged: (String? newCategory) {
-              if (newCategory != null) {
-                _filterTasks(newCategory);
-              }
-            },
-            style: TextStyle(color: Colors.black),
-            dropdownColor: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(color: AppColors.color1),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _selectedCategory,
+                  items: _categoryIds.keys.map((String category) {
+                    return DropdownMenuItem<String>(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
+                  onChanged: (String? newCategory) {
+                    if (newCategory != null) {
+                      _filterTasks(newCategory);
+                    }
+                  },
+                  style: const TextStyle(color: Colors.black),
+                  dropdownColor: Colors.white,
+                ),
+              ),
+            ),
           ),
           Expanded(
             child: ListView.builder(
               itemCount: filteredTasks.length,
               itemBuilder: (context, index) {
                 final task = filteredTasks[index];
-                return ListTile(
-                  title: Text(task.name),
-                  subtitle: Text('Deadline: ${task.deadline}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Checkbox(
-                        value: task.is_done,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            task.checkDone(task.uid!);
-                          });
-                        },
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 5,
+                  child: ListTile(
+                    title: Text(
+                      task.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog<bool>(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('Confirm Delete'),
-                                content: const Text(
-                                    'Are you sure you want to delete this task?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
-                                    child: const Text('Delete'),
-                                  ),
-                                ],
-                              );
-                            },
-                          ).then((confirmDelete) {
-                            if (confirmDelete ?? false) {
-                              task.delete().then((_) {
-                                setState(() {
-                                  _tasks.removeAt(index);
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Task deleted")),
+                    ),
+                    subtitle: Text('Deadline: ${task.deadline}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          value: task.is_done,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              task.checkDone(task.uid!);
+                            });
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            showDialog<bool>(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Confirm Delete'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this task?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
                                 );
-                              });
-                            }
-                          });
-                        },
-                      ),
-                    ],
+                              },
+                            ).then((confirmDelete) {
+                              if (confirmDelete ?? false) {
+                                task.delete().then((_) {
+                                  setState(() {
+                                    _tasks.removeAt(index);
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Task deleted")),
+                                  );
+                                });
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
