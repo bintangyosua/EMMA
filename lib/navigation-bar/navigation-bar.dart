@@ -7,6 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emma/navigation-bar/update_profile.dart';
 import 'package:emma/ui/login_screen.dart';
 import 'package:emma/navigation-bar/statistic_page.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
@@ -21,6 +23,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   String? username;
   String? email;
   String? password;
+  File? profilePicture;
 
   @override
   void initState() {
@@ -40,7 +43,7 @@ class _NavigationExampleState extends State<NavigationExample> {
       setState(() {
         username = userDoc['name'];
         email = userDoc['email'];
-        password = userDoc['password']; // Ambil password dari Firestore
+        password = userDoc['password'];
       });
     }
   }
@@ -79,6 +82,17 @@ class _NavigationExampleState extends State<NavigationExample> {
     }
   }
 
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        profilePicture = File(pickedImage.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -114,8 +128,8 @@ class _NavigationExampleState extends State<NavigationExample> {
             ),
             NavigationDestination(
               selectedIcon:
-                  Icon(Icons.bar_chart, color: Colors.black), // Updated icon
-              icon: Icon(Icons.task, color: Colors.black54), // Updated icon
+                  Icon(Icons.task, color: Colors.black), // Updated icon
+              icon: Icon(Icons.task_outlined, color: Colors.black54),
               label: 'Tasks', // Updated label
             ),
             NavigationDestination(
@@ -152,13 +166,21 @@ class _NavigationExampleState extends State<NavigationExample> {
                     Center(
                       child: Column(
                         children: [
-                          CircleAvatar(
-                            radius: 60,
-                            backgroundColor: AppColors.color2,
-                            child: const Icon(
-                              Icons.person,
-                              size: 70,
-                              color: Colors.white,
+                          GestureDetector(
+                            onTap: pickImage,
+                            child: CircleAvatar(
+                              radius: 60,
+                              backgroundColor: AppColors.color2,
+                              backgroundImage: profilePicture != null
+                                  ? FileImage(profilePicture!)
+                                  : null,
+                              child: profilePicture == null
+                                  ? const Icon(
+                                      Icons.person,
+                                      size: 70,
+                                      color: Colors.white,
+                                    )
+                                  : null,
                             ),
                           ),
                           const SizedBox(height: 16.0),
@@ -243,7 +265,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                             ),
                             elevation: 3,
                           ),
-                          onPressed: confirmLogout, // Add logout confirmation
+                          onPressed: confirmLogout,
                           child: const Text(
                             "Log Out",
                             style: TextStyle(
