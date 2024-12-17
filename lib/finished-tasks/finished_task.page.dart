@@ -1,4 +1,5 @@
 import 'package:emma/colors.dart';
+import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -130,6 +131,17 @@ class _TaskListPageState extends State<TaskListPage> {
                   ),
                   elevation: 5,
                   child: ListTile(
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TaskDetailPage(
+                            task: task,
+                            onTaskChanged: () => _loadTasks(),
+                          ),
+                        ),
+                      )
+                    },
                     title: Text(
                       task.name,
                       style: const TextStyle(
