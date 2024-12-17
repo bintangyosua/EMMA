@@ -152,8 +152,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
 
   Widget _buildTaskItem(Task task, VoidCallback onTap, String categoryId) {
     return ListTile(
-      onTap: onTap,
-      onLongPress: () {
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(

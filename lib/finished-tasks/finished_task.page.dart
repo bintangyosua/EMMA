@@ -70,12 +70,12 @@ class _TaskListPageState extends State<TaskListPage> {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              height: 30,
-              width: 30,
+              height: 36,
+              width: 36,
             ),
             const SizedBox(width: 8),
             const Text(
-              'EMMA',
+              'Tasks',
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w900,

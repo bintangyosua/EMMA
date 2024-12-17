@@ -68,7 +68,26 @@ class _StatisticPageState extends State<StatisticPage> {
 
     if (isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Statistics')),
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/logo.png',
+                height: 36,
+                width: 36,
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Statistics',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -76,7 +95,26 @@ class _StatisticPageState extends State<StatisticPage> {
     // If there's an error, show error message
     if (errorMessage != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Statistics')),
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/logo.png',
+                height: 36,
+                width: 36,
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Statistics',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
         body: Center(
           child: Text(
             errorMessage!,
@@ -88,7 +126,24 @@ class _StatisticPageState extends State<StatisticPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Statistics'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              height: 36,
+              width: 36,
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Statistics',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Column(

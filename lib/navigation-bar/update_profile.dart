@@ -90,9 +90,23 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          "Update Profile",
-          style: TextStyle(color: Colors.white),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              height: 36,
+              width: 36,
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Update Profile',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                color: Colors.black87,
+              ),
+            ),
+          ],
         ),
         backgroundColor: AppColors.color2,
       ),

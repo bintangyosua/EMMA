@@ -25,12 +25,16 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   // List of predefined profile pictures
   final List<String> profilePictures = [
-    'assets/images/profile1.jpg',
-    'assets/images/profile2.jpg',
-    'assets/images/profile3.jpg',
-    'assets/images/profile4.jpg',
-    'assets/images/profile5.jpg',
-    'assets/images/profile6.jpg',
+    'assets/images/profile1.png',
+    'assets/images/profile2.png',
+    'assets/images/profile3.png',
+    'assets/images/profile4.png',
+    'assets/images/profile5.png',
+    'assets/images/profile6.png',
+    'assets/images/profile7.png',
+    'assets/images/profile8.png',
+    'assets/images/profile9.png',
+    'assets/images/profile10.png',
   ];
 
   @override
