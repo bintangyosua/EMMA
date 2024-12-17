@@ -172,6 +172,11 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
         ),
       ),
       trailing: Checkbox(
+        focusColor: const Color.fromARGB(255, 217, 217, 217),
+        // overlayColor: MaterialStateProperty.all(Colors.white),
+        // hoverColor: Colors.white,
+        fillColor:
+            MaterialStateProperty.all(const Color.fromARGB(255, 217, 217, 217)),
         value: task.is_done,
         onChanged: (bool? value) {
           if (categoryId == 'uw0sLWpsSWYFPfeTbijO') {
@@ -303,7 +308,7 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppColors.color1,
+        backgroundColor: AppColors.color2,
         onPressed: () {
           showDialog(
             context: context,
@@ -312,8 +317,14 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
             },
           );
         },
-        icon: const Icon(Icons.add),
-        label: const Text('New Task'),
+        icon: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        label: const Text(
+          'New Task',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Container(
         color: Colors.white,
