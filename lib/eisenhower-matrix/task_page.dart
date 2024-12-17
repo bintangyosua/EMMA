@@ -24,10 +24,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   late TextEditingController _taskDescController;
   late TextEditingController _taskCategoryController;
   late TextEditingController _taskDeadlineController;
-  late TextEditingController _taskReminderController;
 
   DateTime? _taskDeadline;
-  DateTime? _taskReminder;
 
   List<Category> categories =
       []; // Ganti dengan daftar kategori yang Anda miliki
@@ -41,8 +39,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         TextEditingController(text: widget.task.category_id);
     _taskDeadlineController =
         TextEditingController(text: widget.task.deadline.toString());
-    _taskReminderController =
-        TextEditingController(text: widget.task.reminder.toString());
 
     _loadCategory();
   }
@@ -75,7 +71,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     _taskDescController.dispose();
     _taskCategoryController.dispose();
     _taskDeadlineController.dispose();
-    _taskReminderController.dispose();
     super.dispose();
   }
 
@@ -126,7 +121,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         'name': _taskNameController.text,
         'desc': _taskDescController.text,
         'deadline': Task.parseDateTime(_taskDeadlineController.text),
-        'reminder': Task.parseDateTime(_taskReminderController.text),
         'category_id': _taskCategoryController.text,
       }).then((value) {
         if (mounted) {
@@ -203,18 +197,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     _taskDeadline = date;
                     _taskDeadlineController.text =
                         DateFormat('dd/MM/yyyy').format(_taskDeadline!);
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              _buildDatePickerTextField(
-                controller: _taskReminderController,
-                labelText: 'Reminder',
-                onDateSelected: (date) {
-                  setState(() {
-                    _taskReminder = date;
-                    _taskReminderController.text =
-                        DateFormat('dd/MM/yyyy').format(_taskReminder!);
                   });
                 },
               ),

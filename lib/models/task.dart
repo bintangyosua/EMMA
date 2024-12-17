@@ -7,7 +7,6 @@ class Task {
   final DateTime? deadline;
   final String desc;
   final String name;
-  final DateTime? reminder;
   final String? user_id;
   final String category_id;
   bool is_done;
@@ -18,7 +17,6 @@ class Task {
       required this.deadline,
       required this.desc,
       required this.name,
-      required this.reminder,
       required this.user_id,
       required this.category_id,
       required this.is_done,
@@ -29,7 +27,6 @@ class Task {
       'deadline': deadline,
       'desc': desc,
       'name': name,
-      'reminder': reminder,
       'user_id': user_id,
       'category_id': category_id,
       'is_done': is_done
@@ -122,9 +119,6 @@ class Task {
         desc: map['desc'] ??
             'No description', // Nilai default jika deskripsi kosong
         name: map['name'] ?? 'Untitled', // Nilai default jika name kosong
-        reminder: map['reminder'] != null
-            ? (map['reminder'] as Timestamp).toDate()
-            : null,
         user_id: map['user_id'] is DocumentReference
             ? (map['user_id'] as DocumentReference).id
             : map['user_id'],
@@ -159,8 +153,6 @@ class Task {
           .doc(uid)
           .update({'is_done': newIsDone});
       this.is_done = newIsDone;
-
-      print('value is_done: $newIsDone');
 
       return true;
     } catch (e) {

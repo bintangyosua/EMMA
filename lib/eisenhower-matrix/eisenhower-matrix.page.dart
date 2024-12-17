@@ -97,6 +97,8 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
       final notUrgentNotImportantTasks =
           await Task.findTasksByCategory('qUPKuIqJioKvZO8qYD3L');
 
+      print(urgentImportantTasks);
+
       setState(() {
         _urgentImportantTasks = urgentImportantTasks;
         _notUrgentImportantTasks = notUrgentImportantTasks;
@@ -142,7 +144,9 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
       Task task, Animation<double> animation, String categoryId) {
     return SizeTransition(
       sizeFactor: animation,
-      child: _buildTaskItem(task, () {}, categoryId),
+      child: _buildTaskItem(task, () {
+        task.checkDone(task.uid!);
+      }, categoryId),
     );
   }
 

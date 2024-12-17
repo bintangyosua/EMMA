@@ -29,11 +29,8 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
       TextEditingController();
   late final TextEditingController _taskDeadlineController =
       TextEditingController();
-  late final TextEditingController _taskReminderController =
-      TextEditingController();
 
   DateTime? _taskDeadline;
-  DateTime? _taskReminder;
 
   List<Category> _categories = [];
 
@@ -68,7 +65,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
     _taskDescController.dispose();
     _taskCategoryController.dispose();
     _taskDeadlineController.dispose();
-    _taskReminderController.dispose();
     super.dispose();
   }
 
@@ -80,15 +76,13 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
           desc: _taskDescController.text,
           category_id: _taskCategoryController.text,
           deadline: _taskDeadline,
-          reminder: _taskReminder,
           user_id: currentUser.uid,
           is_done: false);
 
       if (_taskNameController.text.isEmpty ||
           _taskDescController.text.isEmpty ||
           _taskCategoryController.text.isEmpty ||
-          _taskDeadline == null ||
-          _taskReminder == null) {
+          _taskDeadline == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Every tasks must not be empty'),
@@ -173,18 +167,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
                     _taskDeadline = date;
                     _taskDeadlineController.text =
                         DateFormat('dd/MM/yyyy').format(_taskDeadline!);
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              _buildDatePickerTextField(
-                controller: _taskReminderController,
-                labelText: 'Reminder',
-                onDateSelected: (date) {
-                  setState(() {
-                    _taskReminder = date;
-                    _taskReminderController.text =
-                        DateFormat('dd/MM/yyyy').format(_taskReminder!);
                   });
                 },
               ),
