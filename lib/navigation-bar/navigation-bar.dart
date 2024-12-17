@@ -7,8 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emma/navigation-bar/update_profile.dart';
 import 'package:emma/ui/login_screen.dart';
 import 'package:emma/navigation-bar/statistic_page.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
@@ -23,7 +21,17 @@ class _NavigationExampleState extends State<NavigationExample> {
   String? username;
   String? email;
   String? password;
-  File? profilePicture;
+  String? selectedProfilePicture;
+
+  // List of predefined profile pictures
+  final List<String> profilePictures = [
+    'assets/images/profile1.jpg',
+    'assets/images/profile2.jpg',
+    'assets/images/profile3.jpg',
+    'assets/images/profile4.jpg',
+    'assets/images/profile5.jpg',
+    'assets/images/profile6.jpg',
+  ];
 
   @override
   void initState() {
@@ -44,12 +52,96 @@ class _NavigationExampleState extends State<NavigationExample> {
         username = userDoc['name'];
         email = userDoc['email'];
         password = userDoc['password'];
+        selectedProfilePicture =
+            userDoc['profilePicture'] ?? profilePictures[0];
       });
     }
   }
 
   Future<void> refreshUserData() async {
     await fetchUserData();
+  }
+
+  void _showProfilePictureModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Center(
+            child: Text(
+              'Choose Profile Picture',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.color2,
+              ),
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  alignment: WrapAlignment.center,
+                  children: profilePictures.map((picturePath) {
+                    return GestureDetector(
+                      onTap: () async {
+                        // Update profile picture in Firestore
+                        User? currentUser = FirebaseAuth.instance.currentUser;
+                        if (currentUser != null) {
+                          await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(currentUser.uid)
+                              .update({'profilePicture': picturePath});
+
+                          setState(() {
+                            selectedProfilePicture = picturePath;
+                          });
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedProfilePicture == picturePath
+                                ? AppColors.color2
+                                : Colors.transparent,
+                            width: 3,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(picturePath),
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: AppColors.color4,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> confirmLogout() async {
@@ -82,17 +174,6 @@ class _NavigationExampleState extends State<NavigationExample> {
     }
   }
 
-  Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedImage != null) {
-      setState(() {
-        profilePicture = File(pickedImage.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -120,17 +201,14 @@ class _NavigationExampleState extends State<NavigationExample> {
               label: 'Home',
             ),
             NavigationDestination(
-              selectedIcon:
-                  Icon(Icons.bar_chart, color: Colors.black), // Updated icon
-              icon: Icon(Icons.bar_chart_outlined,
-                  color: Colors.black54), // Updated icon
-              label: 'Statistics', // Updated label
+              selectedIcon: Icon(Icons.bar_chart, color: Colors.black),
+              icon: Icon(Icons.bar_chart_outlined, color: Colors.black54),
+              label: 'Statistics',
             ),
             NavigationDestination(
-              selectedIcon:
-                  Icon(Icons.task, color: Colors.black), // Updated icon
+              selectedIcon: Icon(Icons.task, color: Colors.black),
               icon: Icon(Icons.task_outlined, color: Colors.black54),
-              label: 'Tasks', // Updated label
+              label: 'Tasks',
             ),
             NavigationDestination(
               selectedIcon: Icon(Icons.person, color: Colors.black),
@@ -167,20 +245,33 @@ class _NavigationExampleState extends State<NavigationExample> {
                       child: Column(
                         children: [
                           GestureDetector(
-                            onTap: pickImage,
+                            onTap: _showProfilePictureModal,
                             child: CircleAvatar(
                               radius: 60,
                               backgroundColor: AppColors.color2,
-                              backgroundImage: profilePicture != null
-                                  ? FileImage(profilePicture!)
+                              backgroundImage: selectedProfilePicture != null
+                                  ? AssetImage(selectedProfilePicture!)
                                   : null,
-                              child: profilePicture == null
+                              child: selectedProfilePicture == null
                                   ? const Icon(
                                       Icons.person,
                                       size: 70,
                                       color: Colors.white,
                                     )
                                   : null,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          GestureDetector(
+                            onTap: _showProfilePictureModal,
+                            child: Text(
+                              "Change Profile Picture",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.color2,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 16.0),
