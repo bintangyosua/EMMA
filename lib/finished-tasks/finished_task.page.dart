@@ -1,6 +1,7 @@
 import 'package:emma/colors.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TaskListPage extends StatefulWidget {
   @override
@@ -10,8 +11,9 @@ class TaskListPage extends StatefulWidget {
 class _TaskListPageState extends State<TaskListPage> {
   List<Task> _tasks = [];
   String _selectedCategory = 'All';
+  String _currentUserId = '';
 
-  // Define category IDs as constants to match StatisticPage
+  // Define category IDs as constants
   static const Map<String, String> _categoryIds = {
     'All': 'All',
     'Do Now': 'uw0sLWpsSWYFPfeTbijO',
@@ -23,13 +25,25 @@ class _TaskListPageState extends State<TaskListPage> {
   @override
   void initState() {
     super.initState();
-    _loadTasks();
+    _loadCurrentUserId();
   }
 
-  void _loadTasks() async {
+  Future<void> _loadCurrentUserId() async {
+    // Get the current user's ID
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        _currentUserId = user.uid;
+      });
+      _loadTasks(); // Load tasks after getting the user ID
+    }
+  }
+
+  Future<void> _loadTasks() async {
+    // Fetch all tasks and filter by the current user's ID
     List<Task> tasks = await Task.findAll();
     setState(() {
-      _tasks = tasks;
+      _tasks = tasks.where((task) => task.user_id == _currentUserId).toList();
     });
   }
 

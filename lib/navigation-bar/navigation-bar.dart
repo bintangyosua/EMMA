@@ -49,13 +49,13 @@ class _NavigationExampleState extends State<NavigationExample> {
     await fetchUserData();
   }
 
-  Future<void> deleteTask(String taskId) async {
-    final confirmDelete = await showDialog<bool>(
+  Future<void> confirmLogout() async {
+    final confirm = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete Task'),
-          content: const Text('Are you sure you want to delete this task?'),
+          title: const Text('Log Out'),
+          content: const Text('Are you sure you want to log out?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -63,18 +63,18 @@ class _NavigationExampleState extends State<NavigationExample> {
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Delete'),
+              child: const Text('Log Out'),
             ),
           ],
         );
       },
     );
 
-    if (confirmDelete ?? false) {
-      await FirebaseFirestore.instance.collection('tasks').doc(taskId).delete();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Task deleted successfully')),
+    if (confirm ?? false) {
+      FirebaseAuth.instance.signOut(); // Perform logout
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     }
   }
@@ -140,28 +140,28 @@ class _NavigationExampleState extends State<NavigationExample> {
                     Center(
                       child: Text(
                         'Profile',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          color: Colors.black,
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: AppColors.color2,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    const SizedBox(height: 16.0),
+                    const SizedBox(height: 24.0),
                     Center(
                       child: Column(
                         children: [
                           CircleAvatar(
-                            radius: 50,
-                            backgroundColor:
-                                const Color.fromARGB(255, 101, 101, 101),
+                            radius: 60,
+                            backgroundColor: AppColors.color2,
                             child: const Icon(
                               Icons.person,
-                              size: 60,
+                              size: 70,
                               color: Colors.white,
                             ),
                           ),
-                          const SizedBox(height: 8.0),
+                          const SizedBox(height: 16.0),
                           GestureDetector(
                             onTap: () async {
                               await Navigator.push(
@@ -172,7 +172,6 @@ class _NavigationExampleState extends State<NavigationExample> {
                                   ),
                                 ),
                               );
-                              // Refresh user data after returning from update profile page
                               await refreshUserData();
                             },
                             child: Text(
@@ -188,11 +187,13 @@ class _NavigationExampleState extends State<NavigationExample> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16.0),
-                    // User Details
+                    const SizedBox(height: 24.0),
                     Card(
-                      color: Colors.white,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                       child: ListTile(
                         leading:
                             const Icon(Icons.person, color: AppColors.color2),
@@ -202,7 +203,10 @@ class _NavigationExampleState extends State<NavigationExample> {
                     ),
                     Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      color: Colors.white,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                       child: ListTile(
                         leading:
                             const Icon(Icons.email, color: AppColors.color2),
@@ -212,40 +216,40 @@ class _NavigationExampleState extends State<NavigationExample> {
                     ),
                     Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      color: Colors.white,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                       child: ListTile(
                         leading:
                             const Icon(Icons.lock, color: AppColors.color2),
                         title: const Text('Password'),
-                        subtitle: Text(
-                            '*' * (password?.length ?? 0)), // Tampilkan bintang
+                        subtitle: Text('*' * (password?.length ?? 0)),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
                     Center(
                       child: SizedBox(
-                        width: 200,
+                        width: 250,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.color4,
                             padding: const EdgeInsets.symmetric(
-                              vertical: 12,
+                              vertical: 14,
                               horizontal: 32,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
+                            elevation: 3,
                           ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                            );
-                          },
+                          onPressed: confirmLogout, // Add logout confirmation
                           child: const Text(
                             "Log Out",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -253,7 +257,7 @@ class _NavigationExampleState extends State<NavigationExample> {
                   ],
                 ),
               )
-            : const Center(child: CircularProgressIndicator()),
+            : const Center(child: CircularProgressIndicator())
       ][currentPageIndex],
     );
   }
