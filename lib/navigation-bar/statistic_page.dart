@@ -68,7 +68,9 @@ class _StatisticPageState extends State<StatisticPage> {
 
     if (isLoading) {
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: Row(
             children: [
               Image.asset(

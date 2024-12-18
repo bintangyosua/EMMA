@@ -45,6 +45,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       if (currentUser != null) {
         // Update Firestore document
         try {
+          // Optionally, update the Firebase Auth email or password
+          await currentUser.updateEmail(_emailController.text);
+          await currentUser.updatePassword(_passwordController.text);
+
+          widget.reloadDataCallback();
+
           await FirebaseFirestore.instance
               .collection('users')
               .doc(currentUser.uid)
@@ -54,19 +60,19 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             'password': _passwordController.text,
           });
 
-          // Optionally, update the Firebase Auth email or password
-          await currentUser.updateEmail(_emailController.text);
-          await currentUser.updatePassword(_passwordController.text);
+          widget.reloadDataCallback();
 
           // Show a success message
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Profile updated successfully!"),
           ));
 
-          widget.reloadDataCallback();
           // Navigate back to profile page
           Navigator.pop(context);
         } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.toString()),
+          ));
           print(e);
         }
       }

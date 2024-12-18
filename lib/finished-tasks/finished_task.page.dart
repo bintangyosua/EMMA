@@ -66,6 +66,7 @@ class _TaskListPageState extends State<TaskListPage> {
             .toList();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
