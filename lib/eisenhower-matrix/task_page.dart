@@ -158,6 +158,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
+            color: Colors.white,
             onPressed: _deleteTask,
           ),
         ],
@@ -296,7 +297,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       onTap: () async {
         final DateTime? pickedDate = await showDatePicker(
           context: context,
-          initialDate: DateTime.now(),
+          initialDate: DateTime.parse(controller.text),
           firstDate: DateTime.now(),
           lastDate: DateTime(2030),
           helpText: 'Select $labelText',

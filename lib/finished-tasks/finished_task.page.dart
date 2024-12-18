@@ -3,6 +3,7 @@ import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class TaskListPage extends StatefulWidget {
   @override
@@ -148,7 +149,8 @@ class _TaskListPageState extends State<TaskListPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text('Deadline: ${task.deadline}'),
+                    subtitle: Text(
+                        'Deadline: ${DateFormat('dd MMMM yyyy').format(DateTime.parse(task.deadline.toString()))}'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

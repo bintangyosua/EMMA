@@ -4,6 +4,7 @@ import 'package:emma/colors.dart';
 import 'package:emma/eisenhower-matrix/task_create.dart';
 import 'package:emma/eisenhower-matrix/task_page.dart';
 import 'package:emma/models/task.dart';
+import 'package:intl/intl.dart';
 
 class EisenhowerMatrixPage extends StatefulWidget {
   const EisenhowerMatrixPage({Key? key}) : super(key: key);
@@ -163,6 +164,13 @@ class _EisenhowerMatrixPageState extends State<EisenhowerMatrixPage> {
           ),
         );
       },
+      subtitle: Text(
+        DateFormat('d MMM yyyy').format(task.deadline!),
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.white70,
+        ),
+      ),
       title: Text(
         task.name.length > 20 ? '${task.name.substring(0, 20)}...' : task.name,
         style: TextStyle(

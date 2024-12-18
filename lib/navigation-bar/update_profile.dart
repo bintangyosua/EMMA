@@ -92,18 +92,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         ),
         title: Row(
           children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 36,
-              width: 36,
-            ),
             const SizedBox(width: 12),
             const Text(
               'Update Profile',
               style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                color: Colors.black87,
+                color: Colors.white,
               ),
             ),
           ],
